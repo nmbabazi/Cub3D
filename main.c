@@ -32,6 +32,7 @@ typedef struct	s_param
 	void	*win_ptr;
 	t_image	img;
 }				t_param;
+
 const char map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
     "10000000000000010001",
@@ -56,39 +57,44 @@ int	deal_key(int nb, t_param *param)
 	return (1);
 }
 
-void	ft_stroke(int x_st, int y_st, int x_end, int y_end, t_param *param)
+
+void	ft_drawline(int X, int Y, float distance, int color, float angle, t_param *param)
 {
-	if (y_end < 0)
-		y_end *= -1;
-	if (x_end < 0)
-		x_end *= -1;
-	while (y_st < y_end)
+	float i;
+	int x;
+	int y;
+	int longeur;
+
+	longeur = 0;
+	i = 0;
+	x = 0;
+	y = 0;
+	while (i < distance)
 	{
-		while (x_st < x_end)
-		{
-			param->img.data[y_st * WIN_WIDTH + x_st] = 0xffff00;
-			x_st++;
-		}
-		y_st++;
+		param->img.data[(Y + y) * WIN_WIDTH + (X + x)] = color;
+		x = cos(angle) * longeur;
+		y = sin(angle) * longeur;
+		longeur++;
+		i++;
 	}
 }
 
-void	ft_creattile(int x, int y, int size, int col, t_param *param)
+void	ft_sqare(int x, int y, int size, int col, t_param *param)
 {	
 	int count_y = 0;
 	int count_x = 0;
 	int x_start = x;
 	int col_start = col;
 	
-	while (count_y < TILE_S)
+	while (count_y < size)
 	{
 		count_x = 0;
 		x = x_start;
-		while(count_x < TILE_S)
+		while(count_x < size)
 		{
 			if (y % TILE_S == 0 || x % TILE_S == 0)
 				col = 0xFFFFFF;
-			else 
+			else
 				col = col_start;
 			param->img.data[y * WIN_WIDTH + x] = col;
 			count_x++;
@@ -100,33 +106,6 @@ void	ft_creattile(int x, int y, int size, int col, t_param *param)
 	return;
 }
 
-void	ft_creatplayer(int x, int y, t_param *param)
-{
-	int i = 0;
-	int l = 0;
-	int x_start = x;
-	int y_start = y;
-	int x_end;
-	int y_end;
-	
-	while (l < 10)
-	{
-		i = 0;
-		x = x_start;
-		while (i < 10)
-		{
-			param->img.data[y * WIN_WIDTH + x] = 0x850606;
-			i++;
-			x++;
-		}
-		l++;
-		y++;
-	}	
-//	printf("ANGLE %6f\n", cos(70 * (PI / 180)));	
-	x_end = x_start + cos(M_PI / 2) * 20;
-	y_end = y_start + sin(M_PI / 2) * 20;
-	ft_stroke(x_start, y_start, x_end, y_end, param);
-}
 
 void	ft_placeplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param, t_player *player)
 {
@@ -140,15 +119,16 @@ void	ft_placeplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param, t_player
 		{	
 			if (map[l][i] == '3')
 			{
-				ft_creatplayer(i * TILE_S, l * TILE_S, param);
+				ft_sqare((i * TILE_S) + TILE_S / 4, (l * TILE_S) + TILE_S / 4, 25, 0xFF0000, param);
+				player->x = i * TILE_S + TILE_S / 2;
+				player->y = l * TILE_S + TILE_S / 2;
 				break;
 			}
 			i++;
 		}
 		l++;
 	}
-	player->x = i * TILE_S;
-	player->y = l * TILE_S;
+	ft_drawline(player->x, player->y, 40, 0xffff00, M_PI / 2, param);
 	return ;
 }
 
@@ -167,7 +147,7 @@ void	ft_creatgrid(const char map[13][20], t_param *param)
 				col = 0xFFFFFF;
 			else if (map[l][i] != '1')
 				col = 0x000000;	
-			ft_creattile(i * TILE_S, l * TILE_S, TILE_S, col, param);
+			ft_sqare(i * TILE_S, l * TILE_S, TILE_S, col, param);
 			i++;
 		}
 		l++;
@@ -186,6 +166,8 @@ int main()
 	ft_creatgrid(map, &param);
 	ft_placeplayer(map, &param, &player);
 	mlx_put_image_to_window(param.mlx_ptr, param.win_ptr, param.img.img_ptr, 0, 0);
+	mlx_hook(param.win_ptr, KeyPress, KeyPressMask, &key_press, &param);
+	mlx_hook(param.win_ptr, KeyRelease, KeyReleaseMask, &key_release, &param);
 	mlx_key_hook(param.win_ptr, deal_key, &param);
 	mlx_loop(param.mlx_ptr);
 }
