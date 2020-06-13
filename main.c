@@ -31,10 +31,10 @@ typedef struct	s_ray
 	float	rayAngle;
 	float	wallHitX;
 	float	wallHitY;
-	float	CollDistance;
+	float	collDistance;
 	int		rayDown;
 	int		rayRight;
-	float		len;
+	int	wasHitVert;
 	
 }				t_ray;
 typedef struct	s_param
@@ -52,8 +52,8 @@ const char map[MAP_ROWS][MAP_COLS] = {
     "10000000000000010001",
     "10000000000000010001",
     "10000000000000000001",
-    "10000000000030000001",
     "10000000000000000001",
+    "10000000003000000001",
     "10000000000000000001",
     "10000011100000000001",
     "10000000000000010001",
@@ -64,8 +64,8 @@ const char map[MAP_ROWS][MAP_COLS] = {
 
 float	ft_distance(float x, float y, float xend, float yend)
 {
-//	return (sqrt((xend - x) * (xend -x) + (yend - y) * (yend - y)));
-	return (sqrt((x - xend) * (x -xend) + (y - yend) * (y - yend)));
+	return (sqrt((xend - x) * (xend -x) + (yend - y) * (yend - y)));
+//	return (sqrt((x - xend) * (x -xend) + (y - yend) * (y - yend)));
 
 }
 
@@ -221,7 +221,6 @@ void	ft_renderplayer(t_param *param)
 {
 	int l = 0;
 	ft_sqare(param->player.x - 15 / 2, param->player.y - 15 / 2, 15, 0xFF0000, param);
-	ft_drawline(param->player.x, param->player.y, 40, 0xffff00, param->player.rotationAngle, param);
 
 }
 
@@ -264,88 +263,134 @@ float	ft_normalizeAngle(float angle)
 	return (angle); 
 }
 
-void	ft_renderrays(t_param *param)
+void	ft_rayfacing(t_param *param, float angle)
 {
-//////////////////////HORIZONTAL//////////////////////////
-	float	yintercept = floor(param->player.y / TILE_S) * TILE_S + (TILE_S * param->ray.rayDown);
-	float	xintercept = param->player.x + (yintercept - param->player.y) / tan(param->ray.rayAngle);
-	float	xstep = TILE_S * tan(param->ray.rayAngle);
-	float	ystep = TILE_S;
-	int		horzHit;
-	float	wallHitX;
-	float	wallHitY;
+	if (angle > 0 && angle < M_PI)
+		param->ray.rayDown = 1;
+	else
+		param->ray.rayDown = -1;
+	if (angle < (M_PI * 0.5) || angle > (M_PI * 1.5))
+		param->ray.rayRight = 1;
+	else
+		param->ray.rayRight = -1;
+}
 
-	if (param->ray.rayDown == 0)
+void	ft_initrays(t_ray *ray)
+{
+	ray->rayAngle = 0;
+	ray->wallHitX = 0;
+	ray->wallHitY = 0;
+	ray->collDistance = 0;
+	ray->rayDown = 0;
+	ray->rayRight = 0;
+	ray->wasHitVert = 0;
+	
+}
+
+void	ft_renderrays(t_param *param, float angle)
+{
+	float horzHitDistance = 0;
+	float vertHitDistance = 0;
+//////////////////////HORIZONTAL//////////////////////////
+	ft_initrays(&param->ray);
+	angle = ft_normalizeAngle(angle);
+	ft_rayfacing(param, angle);
+	int	horzHit = 0;
+	float	horzWallHitX = 0;
+	float	horzWallHitY = 0;
+	float yintercept;
+	float xintercept;
+	float xstep;
+	float ystep;
+	
+	yintercept = floor(param->player.y / TILE_S) * TILE_S;
+	if (param->ray.rayDown == 1)
+		yintercept += TILE_S;
+	xintercept = param->player.x + ((yintercept - param->player.y) / tan(angle));
+	ystep = TILE_S;
+	if (param->ray.rayDown == -1)
 		ystep *= -1;
-	if (param->ray.rayRight == 0 && xstep > 0)
+	xstep = TILE_S / tan(angle);
+	if (param->ray.rayRight == -1 && xstep > 0)
 		xstep *= -1;
 	if (param->ray.rayRight == 1 && xstep < 0)
 		xstep *= -1;
 	float	nextHorzY = yintercept;
 	float	nextHorzX = xintercept;
-	if (param->ray.rayDown == 0)
+	if (param->ray.rayDown == -1)
 		nextHorzY--;
 	while (nextHorzX >= 0 && nextHorzX <= WIN_WIDTH  && nextHorzY >= 0 && nextHorzY <= WIN_HEIGHT)
 	{
 		if (ft_isWall(nextHorzX, nextHorzY) == 1)
 		{
 			horzHit = 1;
-			wallHitX = nextHorzX;
-			wallHitY = nextHorzY;
-			param->ray.len = ft_distance(param->player.x, param->player.y, wallHitX, wallHitY);
-//			ft_drawline(param->player.x, param->player.y, param->ray.len, 0xffff00, param->ray.rayAngle, param);
+			horzWallHitX = nextHorzX;
+			horzWallHitY = nextHorzY;
 			break;
 		}
 		else
 			nextHorzX += xstep;
 			nextHorzY += ystep;
 	}
-//	printf("%f\n", param->ray.len);
-/*//////////////////////VERTICAL//////////////////////////
-
-	float	yintercept = floor(param->player.y / TILE_S) * TILE_S + (TILE_S * param->ray.rayDown);
-	float	xintercept = param->player.x + (yintercept - param->player.y) / tan(param->ray.rayAngle);
-	float	xstep = TILE_S * tan(param->ray.rayAngle);
-	float	ystep = TILE_S;
-	int		vertHit;
-	float	wallHitX;
-	float	wallHitY;
-
-	if (param->ray.rayDown == 0)
+/////////////////////VERTICAL//////////////////////////
+	int	vertHit = 0;
+	float	vertWallHitX = 0;
+	float	vertWallHitY = 0;
+	xintercept = floor(param->player.x / TILE_S) * TILE_S;
+	if (param->ray.rayRight == 1)
+		xintercept += TILE_S;
+	yintercept = param->player.y + ((xintercept - param->player.x) * tan(angle));
+	xstep = TILE_S;
+	if (param->ray.rayRight == -1)
+		xstep *= -1;
+	ystep = TILE_S * tan(angle);
+	if (param->ray.rayDown == -1 && ystep > 0)
 		ystep *= -1;
-	if (param->ray.rayRight == 0 && xstep > 0)
-		xstep *= -1;
-	if (param->ray.rayRight == 1 && xstep < 0)
-		xstep *= -1;
+	if (param->ray.rayDown == 1 && ystep < 0)
+		ystep *= -1;
 	float	nextVertY = yintercept;
 	float	nextVertX = xintercept;
-	if (param->ray.rayDown == 0)
-		nextVertY--;
-	while (nextVertX >= 0 && nextVertX <= WIN_WIDTH && nextVertY >= 0 && nextVertY <= WIN_HEIGHT)
+	if (param->ray.rayRight == -1)
+		nextVertX--;
+	while (nextVertX >= 0 && nextVertX <= WIN_WIDTH  && nextVertY >= 0 && nextVertY <= WIN_HEIGHT)
 	{
 		if (ft_isWall(nextVertX, nextVertY) == 1)
 		{
-			VertHit = 1;
-			wallHitX = nextVertX;
-			wallHitY = nextVertY;
+			vertHit = 1;
+			vertWallHitX = nextVertX;
+			vertWallHitY = nextVertY;
 			break;
 		}
 		else
 			nextVertX += xstep;
 			nextVertY += ystep;
-	}*/
-}
-
-void	ft_rayfacing(t_param *param)
-{
-	if (param->ray.rayAngle > 0 && param->ray.rayAngle < M_PI)
-		param->ray.rayDown = 1;
-	if (!(param->ray.rayAngle > 0 && param->ray.rayAngle < M_PI))
-		param->ray.rayDown = 0;
-	if (param->ray.rayAngle > (M_PI / 2) && param->ray.rayAngle < (M_PI *3 / 2))
-		param->ray.rayRight = 1;
-	if (!(param->ray.rayAngle > (M_PI / 2) && param->ray.rayAngle < (M_PI *3 / 2)))
-		param->ray.rayRight = 0;
+	}
+//////////////////////DISTANCES////////////////////
+	if (horzHit == 1)
+		horzHitDistance = ft_distance(param->player.x, param->player.y, horzWallHitX, horzWallHitY);
+	else 
+		horzHitDistance = INT_MAX;
+	if (vertHit == 1)
+		vertHitDistance = ft_distance(param->player.x, param->player.y, vertWallHitX, vertWallHitY);
+	else 
+		vertHitDistance = INT_MAX;
+///////////////////RESULTAT////////////////////
+	if (horzHitDistance <= vertHitDistance)
+	{
+		param->ray.wallHitX = horzWallHitX;
+		param->ray.wallHitY = horzWallHitY;
+		param->ray.collDistance = horzHitDistance;
+		param->ray.wasHitVert = 0;
+	}
+	if (horzHitDistance > vertHitDistance)
+	{
+		param->ray.wallHitX = vertWallHitX;
+		param->ray.wallHitY = vertWallHitY;
+		param->ray.collDistance = vertHitDistance;
+		param->ray.wasHitVert = 1;
+	}
+/////////////////RENDER////////////////////////
+	ft_drawline(param->player.x, param->player.y, param->ray.collDistance, 0xffff00, angle, param);
 }
 
 void	ft_castrays(t_param *param)
@@ -354,14 +399,10 @@ void	ft_castrays(t_param *param)
 	int i = 0;
 	angle = ft_normalizeAngle(angle);
 
-	while (i < 1)
+	while (i < NUM_RAYS)
 	{
-		param->ray.rayAngle = angle;
-		ft_rayfacing(param);
-		ft_renderrays(param);
-		ft_drawline(param->player.x, param->player.y, param->ray.len, 0xffff00, param->ray.rayAngle, param);
+		ft_renderrays(param, angle);
 		angle += FOV / NUM_RAYS;
-		angle = ft_normalizeAngle(angle);
 		i++;
 	}
 }
@@ -373,8 +414,8 @@ int	game_loop(t_param *param)
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr, &param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_rendermap(map, param);
 	ft_updateplayer(param);
-	ft_renderplayer(param);
 	ft_castrays(param);
+	ft_renderplayer(param);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr, 0, 0);
 	mlx_destroy_image(param->mlx_ptr, param->img.img_ptr);
 	return (1);
