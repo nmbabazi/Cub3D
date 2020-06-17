@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:27:50 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/15 16:37:35 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/17 14:16:20 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -46,8 +46,7 @@ void	ft_rectangle(int x, int y, int height, int width, int col, t_param *param)
 	int x_start = x;
 	int col_start = col;
 
-	if (height > WIN_HEIGHT)
-		height = WIN_HEIGHT;
+
 	while (count_y < height)
 	{
 		count_x = 0;

@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/17 11:33:43 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/17 15:13:38 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -103,15 +103,31 @@ void	ft_renderWall(t_param *param, float angle, int i)
 {
 	float	distanceProjection;
 	float	distanceRay;
-	float wallHeight;
+	float height;
+	int  wallHeight;
 	float correctDistance;
+	int	wallTop;
+	int wallBottom;
+	int y;
 
 	distanceRay = param->ray.collDistance;
 	correctDistance = distanceRay * cos(angle - param->player.rotationAngle);
 	distanceProjection = (WIN_WIDTH / 2) / tan(FOV / 2);
-	wallHeight = (TILE_S / correctDistance) * distanceProjection;
-	ft_rectangle(i * COLS_S, (WIN_HEIGHT / 2) - (wallHeight / 2), wallHeight, COLS_S, 0xFFFFFF, param);
 
+	height  = (TILE_S / correctDistance) * distanceProjection;
+	wallHeight = (int)height;
+
+	wallTop = (WIN_HEIGHT / 2) - (wallHeight / 2);
+	wallTop = wallTop < 0 ? 0 : wallTop;
+
+	wallBottom = (WIN_HEIGHT / 2) + (wallHeight / 2);
+	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
+
+	y = wallTop;
+	while (y++ < wallBottom)
+	{
+			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
+	}
 }
 
 int	game_loop(t_param *param)
@@ -123,6 +139,7 @@ int	game_loop(t_param *param)
 	ft_rendermap(map, param);
 	ft_castallrays(param);
 	ft_renderplayer(param);
+	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr, 
 			0, 0);
 	mlx_destroy_image(param->mlx_ptr, param->img.img_ptr);
