@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/17 15:13:38 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/18 15:44:21 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -124,9 +124,16 @@ void	ft_renderWall(t_param *param, float angle, int i)
 	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
 
 	y = wallTop;
+//	y = 0;
+//	while (y++ < wallTop)
+//			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
 	while (y++ < wallBottom)
+			param->img.data[y * WIN_WIDTH + i] = 0x2F4F4F;
+	y = wallBottom;
+	while ( y < WIN_HEIGHT)
 	{
-			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
+			param->img.data[y * WIN_WIDTH + i] = 0x778899;
+			y++;
 	}
 }
 
@@ -135,6 +142,7 @@ int	game_loop(t_param *param)
 	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr, 
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
+	param->texture.txt_ptr = mlx_xpm_to_image(param->mlx_ptr, " ", param->texture.txt_width, param->texture.txt_height);
 	ft_updateplayer(param);
 	ft_rendermap(map, param);
 	ft_castallrays(param);

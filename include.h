@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/17 15:11:57 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/18 15:37:52 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef INCLUDE_H
@@ -61,6 +61,13 @@ typedef struct	s_ray
 	int		wallHitContent;
 
 }				t_ray;
+
+typedef	struct	s_texture
+{
+	int	txt_width;
+	int txt_height;
+}
+				t_texture;
 typedef struct	s_param
 {
 	void	*mlx_ptr;
@@ -68,6 +75,7 @@ typedef struct	s_param
 	t_image	img;
 	t_player	player;
 	t_ray		ray;
+	t_texture	texture;
 }				t_param;
 
 
