@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:47:27 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/18 12:20:49 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/19 12:59:14 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,10 @@ void	ft_castsingleray(t_param *param, float angle, int i)
 			break;
 		}
 		else
+		{
 			nextHorzX += xstep;
 			nextHorzY += ystep;
+		}
 	}
 /////////////////////VERTICAL//////////////////////////
 	int	vertHit = 0;
@@ -110,8 +112,10 @@ void	ft_castsingleray(t_param *param, float angle, int i)
 			break;
 		}
 		else
+		{
 			nextVertX += xstep;
 			nextVertY += ystep;
+		}
 	}
 //////////////////////DISTANCES////////////////////
 	if (horzHit == 1)

@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/18 15:44:21 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/19 16:57:38 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -26,6 +26,7 @@ const char map[MAP_ROWS][MAP_COLS] = {
     "11000000000000010001",
     "11111111111111111111",
 };
+
 
 void	ft_rendermap(const char map[13][20], t_param *param)
 {
@@ -123,12 +124,22 @@ void	ft_renderWall(t_param *param, float angle, int i)
 	wallBottom = (WIN_HEIGHT / 2) + (wallHeight / 2);
 	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
 
-	y = wallTop;
-//	y = 0;
-//	while (y++ < wallTop)
-//			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
-	while (y++ < wallBottom)
-			param->img.data[y * WIN_WIDTH + i] = 0x2F4F4F;
+	int textureOffsetX;
+	if (param->ray.wasHitVert == 1)
+		textureOffsetX = (int)(param->ray.wallHitY * param->texture.width / TILE_S) % param->texture.width;
+	else
+		textureOffsetX = (int)(param->ray.wallHitX * param->texture.width / TILE_S) % param->texture.width;
+//	y = wallTop;
+	y = 0;
+	while (y++ < wallTop)
+			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
+	while (y < wallBottom)
+	{		
+			int distanceFromtop = y + (wallHeight / 2) - (WIN_HEIGHT / 2);
+			int textureOffsetY = distanceFromtop * ((float)param->texture.height / wallHeight);
+			param->img.data[y * WIN_WIDTH + i] = param->texture.data[(textureOffsetY * param->texture.width) + textureOffsetX];
+			y++;
+	}
 	y = wallBottom;
 	while ( y < WIN_HEIGHT)
 	{
@@ -137,15 +148,23 @@ void	ft_renderWall(t_param *param, float angle, int i)
 	}
 }
 
+void	ft_inittexture(t_param *param)
+{
+
+	if (!(param->texture.ptr = mlx_xpm_file_to_image(param->mlx_ptr, "text-bois.xpm", &param->texture.width, &param->texture.height)))
+		printf("ERROR\n");
+	if(!(param->texture.data = (int *)mlx_get_data_addr(param->texture.ptr, &param->texture.bpp, &param->texture.size_l, &param->texture.endian)))
+		printf("ERROR22\n");
+}
+
 int	game_loop(t_param *param)
 {
 	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr, 
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
-	param->texture.txt_ptr = mlx_xpm_to_image(param->mlx_ptr, " ", param->texture.txt_width, param->texture.txt_height);
 	ft_updateplayer(param);
-	ft_rendermap(map, param);
 	ft_castallrays(param);
+	ft_rendermap(map, param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr, 
@@ -163,6 +182,7 @@ int main()
 	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH, 
 			WIN_HEIGHT, "fuck yeah");
 	ft_initplayer(map, &param);
+	ft_inittexture(&param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);

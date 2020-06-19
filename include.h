@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/18 15:37:52 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/19 12:54:01 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef INCLUDE_H
@@ -64,8 +64,13 @@ typedef struct	s_ray
 
 typedef	struct	s_texture
 {
-	int	txt_width;
-	int txt_height;
+	void	*ptr;
+	int	*data;
+	int	bpp;
+	int	endian;
+	int	size_l;
+	int	width;
+	int height;
 }
 				t_texture;
 typedef struct	s_param
