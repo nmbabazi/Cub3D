@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:27:50 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/17 14:16:20 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:49:26 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -41,22 +41,21 @@ void	ft_drawline(int X, int Y, float distance, int color, float angle,
 
 void	ft_rectangle(int x, int y, int height, int width, int col, t_param *param)
 {
-	int count_y = 0;
-	int count_x = 0;
-	int x_start = x;
-	int col_start = col;
+	int count_y;
+	int count_x;
+	int x_start;
+	int col_start;
 
-
+	count_y = 0;
+	count_x = 0;
+	x_start = x;
+	col_start = col;
 	while (count_y < height)
 	{
 		count_x = 0;
 		x = x_start;
 		while(count_x < width)
 		{
-		//	if (y % TILE_S == 0 || x % TILE_S == 0)
-		//		col = 0xFFFFFF;
-		//	else
-		//		col = col_start;
 			param->img.data[y * WIN_WIDTH + x] = col;
 			count_x++;
 			x++;

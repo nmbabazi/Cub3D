@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 12:02:57 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/18 12:57:14 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:49:08 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param)
 {
-	int i = 0;
-	int l = 0;
+	int i;
+	int l;
 
+	i = 0;
+	l = 0;
 	while (l < MAP_ROWS)
 	{
 		i = 0;
@@ -40,9 +42,11 @@ void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param)
 
 void	ft_renderplayer(t_param *param)
 {
-	int l = 0;
-	int size_player = 15;
+	int l;
+	int size_player;
 
+	l = 0;
+	size_player = 15;
 	ft_rectangle((param->player.x - size_player / 2) * MINIMAP, (param->player.y - size_player / 2) * MINIMAP, size_player * MINIMAP, size_player * MINIMAP, 0xFF0000, param);
 
 }

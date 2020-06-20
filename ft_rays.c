@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:47:27 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/20 16:45:40 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:51:23 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ void	ft_initrays(t_ray *ray)
 
 void	ft_castsingleray(t_param *param, float angle, int i)
 {
-	float horzHitDistance = 0;
-	float vertHitDistance = 0;
-//////////////////////HORIZONTAL//////////////////////////
 	ft_initrays(&param->ray);
 	angle = ft_normalizeAngle(angle);
 	ft_raydirection(param, angle);
+//////////////////////HORIZONTAL//////////////////////////
+	float horzHitDistance = 0;
+	float vertHitDistance = 0;
 	int	horzHit = 0;
 	float	horzWallHitX = 0;
 	float	horzWallHitY = 0;
@@ -145,7 +145,7 @@ void	ft_castsingleray(t_param *param, float angle, int i)
 /////////////////RENDER////////////////////////
 	ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP, param->ray.collDistance * MINIMAP, 0xffff00, angle, param);
 //////////////////////////////////////////////
-	ft_renderWall(param, angle, i);
+	ft_render3D(param, angle, i);
 }
 
 void	ft_castallrays(t_param *param)

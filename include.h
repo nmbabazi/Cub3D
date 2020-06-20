@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/20 16:54:28 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:31:30 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef INCLUDE_H
@@ -101,8 +101,10 @@ void	ft_renderplayer(t_param *param);
 void	ft_updateplayer(t_param *param);
 void	ft_rendermap(const char map[13][20], t_param *param);
 void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param);
-void	ft_renderWall(t_param *param, float angle, int i);
+void	ft_render3D(t_param *param, float angle, int i);
 void	ft_inittexture(t_param *param);
 void ft_puttxt(t_param *param, int y, int x, int end, int i);
+void	ft_rendermap(const char map[13][20], t_param *param);
+int	ft_isWall(float x, float y);
 
 #endif

@@ -6,12 +6,13 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/20 17:07:03 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:52:00 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "include.h"
 
-const char map[MAP_ROWS][MAP_COLS] = {
+const char	map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
     "10000000000000010001",
     "10000000000000010001",
@@ -27,23 +28,26 @@ const char map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
 };
 
-
 void	ft_rendermap(const char map[13][20], t_param *param)
 {
-	int i = 0;
-	int l = 0;
-	int col = 0x000000;
-	
+	int i;
+	int l;
+	int col;
+
+	i = 0;
+	l = 0;
+	col = 0x000000;
 	while (l < MAP_ROWS)
 	{
 		i = 0;
-		while(i < MAP_COLS)
-		{	
+		while (i < MAP_COLS)
+		{
 			if (map[l][i] == '1')
 				col = 0xFFFFFF;
 			else if (map[l][i] != '1')
-				col = 0x000000;	
-			ft_rectangle(i * TILE_S * MINIMAP, l * TILE_S * MINIMAP, TILE_S * MINIMAP,  TILE_S * MINIMAP, col, param);
+				col = 0x000000;
+			ft_rectangle(i * TILE_S * MINIMAP, l * TILE_S * MINIMAP,
+					TILE_S * MINIMAP, TILE_S * MINIMAP, col, param);
 			i++;
 		}
 		l++;
@@ -84,45 +88,35 @@ int	key_release(int key, void *data)
 	return (1);
 }
 
-
 int	ft_isWall(float x, float y)
 {
-	int indexX;
-	int indexY;
-	
+	int indexx;
+	int indexy;
+
 	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
 		return (1);
-	indexX = floor(x / TILE_S);
-	indexY = floor(y / TILE_S);
-	if (map[indexY][indexX] == '1')
+	indexx = floor(x / TILE_S);
+	indexy = floor(y / TILE_S);
+	if (map[indexy][indexx] == '1')
 		return(1);
 	return (0);
-
 }
 
-void	ft_renderWall(t_param *param, float angle, int i)
+void	ft_render3D(t_param *param, float angle, int i)
 {
 	float	distanceProjection;
-	float	distanceRay;
-	float height;
-	float correctDistance;
+	float wallDistance;
 	int	wallTop;
 	int wallBottom;
 	int y;
 
-	distanceRay = param->ray.collDistance;
-	correctDistance = distanceRay * cos(angle - param->player.rotationAngle);
+	wallDistance = param->ray.collDistance * cos(angle - param->player.rotationAngle);
 	distanceProjection = (WIN_WIDTH / 2) / tan(FOV / 2);
-
-	height  = (TILE_S / correctDistance) * distanceProjection;
-	param->ray.wallHeight = (int)height;
-
+	param->ray.wallHeight  = (int)((TILE_S / wallDistance) * distanceProjection);
 	wallTop = (WIN_HEIGHT / 2) - (param->ray.wallHeight / 2);
 	wallTop = wallTop < 0 ? 0 : wallTop;
-
 	wallBottom = (WIN_HEIGHT / 2) + (param->ray.wallHeight / 2);
 	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
-
 	y = 0;
 	while (y++ < wallTop)
 			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
