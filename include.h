@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/19 12:54:01 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 16:54:28 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef INCLUDE_H
@@ -19,6 +19,10 @@
 #include <limits.h>
 #include <math.h>
 
+#define NO 0
+#define SO 1
+#define EA 2
+#define WE 3
 #define TILE_S 50
 #define MINIMAP 0.2
 #define MAP_ROWS 13
@@ -58,7 +62,7 @@ typedef struct	s_ray
 	int		rayDown;
 	int		rayRight;
 	int		wasHitVert;
-	int		wallHitContent;
+	int		wallHeight;
 
 }				t_ray;
 
@@ -72,7 +76,7 @@ typedef	struct	s_texture
 	int	width;
 	int height;
 }
-				t_texture;
+				t_texture[4];
 typedef struct	s_param
 {
 	void	*mlx_ptr;
@@ -98,5 +102,7 @@ void	ft_updateplayer(t_param *param);
 void	ft_rendermap(const char map[13][20], t_param *param);
 void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param);
 void	ft_renderWall(t_param *param, float angle, int i);
+void	ft_inittexture(t_param *param);
+void ft_puttxt(t_param *param, int y, int x, int end, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/19 16:57:38 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 17:07:03 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "include.h"
@@ -105,7 +105,6 @@ void	ft_renderWall(t_param *param, float angle, int i)
 	float	distanceProjection;
 	float	distanceRay;
 	float height;
-	int  wallHeight;
 	float correctDistance;
 	int	wallTop;
 	int wallBottom;
@@ -116,45 +115,31 @@ void	ft_renderWall(t_param *param, float angle, int i)
 	distanceProjection = (WIN_WIDTH / 2) / tan(FOV / 2);
 
 	height  = (TILE_S / correctDistance) * distanceProjection;
-	wallHeight = (int)height;
+	param->ray.wallHeight = (int)height;
 
-	wallTop = (WIN_HEIGHT / 2) - (wallHeight / 2);
+	wallTop = (WIN_HEIGHT / 2) - (param->ray.wallHeight / 2);
 	wallTop = wallTop < 0 ? 0 : wallTop;
 
-	wallBottom = (WIN_HEIGHT / 2) + (wallHeight / 2);
+	wallBottom = (WIN_HEIGHT / 2) + (param->ray.wallHeight / 2);
 	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
 
-	int textureOffsetX;
-	if (param->ray.wasHitVert == 1)
-		textureOffsetX = (int)(param->ray.wallHitY * param->texture.width / TILE_S) % param->texture.width;
-	else
-		textureOffsetX = (int)(param->ray.wallHitX * param->texture.width / TILE_S) % param->texture.width;
-//	y = wallTop;
 	y = 0;
 	while (y++ < wallTop)
 			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
-	while (y < wallBottom)
-	{		
-			int distanceFromtop = y + (wallHeight / 2) - (WIN_HEIGHT / 2);
-			int textureOffsetY = distanceFromtop * ((float)param->texture.height / wallHeight);
-			param->img.data[y * WIN_WIDTH + i] = param->texture.data[(textureOffsetY * param->texture.width) + textureOffsetX];
-			y++;
-	}
+	if (param->ray.wasHitVert == 0 && param->ray.rayDown == -1)
+		ft_puttxt(param, wallTop, i, wallBottom, NO);
+	if (param->ray.wasHitVert == 0 && param->ray.rayDown == 1)
+		ft_puttxt(param, wallTop, i, wallBottom, SO);
+	if (param->ray.wasHitVert == 1 && param->ray.rayRight == -1)
+		ft_puttxt(param, wallTop, i, wallBottom, WE);
+	if (param->ray.wasHitVert == 1 && param->ray.rayRight == 1)
+		ft_puttxt(param, wallTop, i, wallBottom, EA);
 	y = wallBottom;
 	while ( y < WIN_HEIGHT)
 	{
 			param->img.data[y * WIN_WIDTH + i] = 0x778899;
 			y++;
 	}
-}
-
-void	ft_inittexture(t_param *param)
-{
-
-	if (!(param->texture.ptr = mlx_xpm_file_to_image(param->mlx_ptr, "text-bois.xpm", &param->texture.width, &param->texture.height)))
-		printf("ERROR\n");
-	if(!(param->texture.data = (int *)mlx_get_data_addr(param->texture.ptr, &param->texture.bpp, &param->texture.size_l, &param->texture.endian)))
-		printf("ERROR22\n");
 }
 
 int	game_loop(t_param *param)
@@ -186,5 +171,6 @@ int main()
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
+//	system("leaks cub3D");
 	mlx_loop(param.mlx_ptr);
 }

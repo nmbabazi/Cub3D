@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:47:27 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/19 12:59:14 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/20 16:45:40 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	ft_initrays(t_ray *ray)
 	ray->rayDown = 0;
 	ray->rayRight = 0;
 	ray->wasHitVert = 0;
+	ray->wallHeight = 0;
 }
 
 void	ft_castsingleray(t_param *param, float angle, int i)
