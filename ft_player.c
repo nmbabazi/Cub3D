@@ -22,21 +22,21 @@ void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param)
 	while (l < MAP_ROWS)
 	{
 		i = 0;
-		while(i < MAP_COLS)
+		while (i < MAP_COLS)
 		{
 			if (map[l][i] == '3')
 			{
 				param->player.x = i * TILE_S + TILE_S / 2;
 				param->player.y = l * TILE_S + TILE_S / 2;
-				break;
+				break ;
 			}
 			i++;
 		}
 		l++;
 	}
-	param->player.rotationAngle = M_PI / 2;
-	param->player.walkSpeed = 2;
-	param->player.turnSpeed  = 2 * (M_PI / 180);
+	param->player.rotationangle = M_PI / 2;
+	param->player.walkspeed = 2;
+	param->player.turnspeed = 2 * (M_PI / 180);
 	return ;
 }
 
@@ -47,21 +47,25 @@ void	ft_renderplayer(t_param *param)
 
 	l = 0;
 	size_player = 15;
-	ft_rectangle((param->player.x - size_player / 2) * MINIMAP, (param->player.y - size_player / 2) * MINIMAP, size_player * MINIMAP, size_player * MINIMAP, 0xFF0000, param);
-
+	ft_rectangle((param->player.x - size_player / 2) * MINIMAP,
+		(param->player.y - size_player / 2) * MINIMAP,
+			size_player * MINIMAP, 0xFF0000, param);
 }
 
 void	ft_updateplayer(t_param *param)
 {
-	param->player.rotationAngle += param->player.turnDirection * param->player.turnSpeed;
-	float  moveStep = param->player.walkDirection * param->player.walkSpeed;
+	float movestep;
+	float newplayerx;
+	float newplayery;
 
-	float NewplayerX = param->player.x + cos(param->player.rotationAngle) * moveStep;
-	float NewplayerY = param->player.y + sin(param->player.rotationAngle) * moveStep;
-
-	if (ft_isWall(NewplayerX, NewplayerY) == 0)
+	param->player.rotationangle += param->player.turndirection *
+		param->player.turnspeed;
+	movestep = param->player.walkdirection * param->player.walkspeed;
+	newplayerx = param->player.x + cos(param->player.rotationangle) * movestep;
+	newplayery = param->player.y + sin(param->player.rotationangle) * movestep;
+	if (ft_iswall(newplayerx, newplayery) == 0)
 	{
-		param->player.x = NewplayerX;
-		param->player.y = NewplayerY;
+		param->player.x = newplayerx;
+		param->player.y = newplayery;
 	}
 }

@@ -6,13 +6,13 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/20 17:52:00 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/22 13:49:54 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include.h"
 
-const char	map[MAP_ROWS][MAP_COLS] = {
+/*const char	map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
     "10000000000000010001",
     "10000000000000010001",
@@ -26,7 +26,7 @@ const char	map[MAP_ROWS][MAP_COLS] = {
     "10100000000000010001",
     "11000000000000010001",
     "11111111111111111111",
-};
+};*/
 
 void	ft_rendermap(const char map[13][20], t_param *param)
 {
@@ -47,48 +47,48 @@ void	ft_rendermap(const char map[13][20], t_param *param)
 			else if (map[l][i] != '1')
 				col = 0x000000;
 			ft_rectangle(i * TILE_S * MINIMAP, l * TILE_S * MINIMAP,
-					TILE_S * MINIMAP, TILE_S * MINIMAP, col, param);
+					TILE_S * MINIMAP, col, param);
 			i++;
 		}
 		l++;
 	}
 }
 
-int	key_press(int key, void *data)
+int		key_press(int key, void *data)
 {
 	t_param *param;
 
 	param = (t_param *)data;
 	if (key == 124)
-		param->player.turnDirection = +1;
+		param->player.turndirection = +1;
 	if (key == 123)
-		param->player.turnDirection = -1;
+		param->player.turndirection = -1;
 	if (key == 126)
-		param->player.walkDirection = 1;
+		param->player.walkdirection = 1;
 	if (key == 125)
-		param->player.walkDirection = -1;
+		param->player.walkdirection = -1;
 	if (key == 53)
 		exit(0);
 	return (1);
 }
 
-int	key_release(int key, void *data)
+int		key_release(int key, void *data)
 {
 	t_param *param;
 
 	param = (t_param *)data;
 	if (key == 124)
-		param->player.turnDirection = 0;
+		param->player.turndirection = 0;
 	if (key == 123)
-		param->player.turnDirection = 0;
+		param->player.turndirection = 0;
 	if (key == 126)
-		param->player.walkDirection = 0;
+		param->player.walkdirection = 0;
 	if (key == 125)
-		param->player.walkDirection = 0;
+		param->player.walkdirection = 0;
 	return (1);
 }
 
-int	ft_isWall(float x, float y)
+int		ft_iswall(float x, float y)
 {
 	int indexx;
 	int indexy;
@@ -98,67 +98,73 @@ int	ft_isWall(float x, float y)
 	indexx = floor(x / TILE_S);
 	indexy = floor(y / TILE_S);
 	if (map[indexy][indexx] == '1')
-		return(1);
+		return (1);
 	return (0);
 }
 
-void	ft_render3D(t_param *param, float angle, int i)
+void	ft_render3d(t_param *param, float angle, int id)
 {
-	float	distanceProjection;
-	float wallDistance;
-	int	wallTop;
-	int wallBottom;
-	int y;
+	float	distanceprojection;
+	float	walldistance;
+	int		walltop;
+	int		wallbottom;
+	int		y;
 
-	wallDistance = param->ray.collDistance * cos(angle - param->player.rotationAngle);
-	distanceProjection = (WIN_WIDTH / 2) / tan(FOV / 2);
-	param->ray.wallHeight  = (int)((TILE_S / wallDistance) * distanceProjection);
-	wallTop = (WIN_HEIGHT / 2) - (param->ray.wallHeight / 2);
-	wallTop = wallTop < 0 ? 0 : wallTop;
-	wallBottom = (WIN_HEIGHT / 2) + (param->ray.wallHeight / 2);
-	wallBottom = wallBottom > WIN_HEIGHT ? WIN_HEIGHT : wallBottom;
 	y = 0;
-	while (y++ < wallTop)
-			param->img.data[y * WIN_WIDTH + i] = 0xC0C0C0;
-	if (param->ray.wasHitVert == 0 && param->ray.rayDown == -1)
-		ft_puttxt(param, wallTop, i, wallBottom, NO);
-	if (param->ray.wasHitVert == 0 && param->ray.rayDown == 1)
-		ft_puttxt(param, wallTop, i, wallBottom, SO);
-	if (param->ray.wasHitVert == 1 && param->ray.rayRight == -1)
-		ft_puttxt(param, wallTop, i, wallBottom, WE);
-	if (param->ray.wasHitVert == 1 && param->ray.rayRight == 1)
-		ft_puttxt(param, wallTop, i, wallBottom, EA);
-	y = wallBottom;
-	while ( y < WIN_HEIGHT)
+	walldistance = param->ray.colldistance *
+		cos(angle - param->player.rotationangle);
+	distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
+	param->ray.wallheight = (int)((TILE_S / walldistance)
+		* distanceprojection);
+	walltop = (WIN_HEIGHT / 2) - (param->ray.wallheight / 2);
+	walltop = walltop < 0 ? 0 : walltop;
+	wallbottom = (WIN_HEIGHT / 2) + (param->ray.wallheight / 2);
+	wallbottom = wallbottom > WIN_HEIGHT ? WIN_HEIGHT : wallbottom;
+	while (y < walltop)
 	{
-			param->img.data[y * WIN_WIDTH + i] = 0x778899;
-			y++;
+		param->img.data[y * WIN_WIDTH + id] = 0xC0C0C0;
+		y++;
+	}
+	if (param->ray.washitvert == 0 && param->ray.raydown == -1)
+		ft_puttxt(param, walltop, id, wallbottom, NO);
+	if (param->ray.washitvert == 0 && param->ray.raydown == 1)
+		ft_puttxt(param, walltop, id, wallbottom, SO);
+	if (param->ray.washitvert == 1 && param->ray.rayright == -1)
+		ft_puttxt(param, walltop, id, wallbottom, WE);
+	if (param->ray.washitvert == 1 && param->ray.rayright == 1)
+		ft_puttxt(param, walltop, id, wallbottom, EA);
+	y = wallbottom;
+	while (y < WIN_HEIGHT)
+	{
+		param->img.data[y * WIN_WIDTH + id] = 0x778899;
+		y++;
 	}
 }
 
-int	game_loop(t_param *param)
+int		game_loop(t_param *param)
 {
 	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr, 
+	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
+//	ft_rendermap(map, param);
 	ft_castallrays(param);
 	ft_rendermap(map, param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
-	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr, 
+	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
 			0, 0);
 	mlx_destroy_image(param->mlx_ptr, param->img.img_ptr);
 	return (1);
 }
 
-int main()
+int		main()
 {
-	t_param param;
-	t_player player;
+	t_param		param;
+	t_player	player;
 
 	param.mlx_ptr = mlx_init();
-	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH, 
+	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH,
 			WIN_HEIGHT, "fuck yeah");
 	ft_initplayer(map, &param);
 	ft_inittexture(&param);
@@ -167,4 +173,5 @@ int main()
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 //	system("leaks cub3D");
 	mlx_loop(param.mlx_ptr);
+	return (1);
 }

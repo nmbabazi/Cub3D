@@ -9,21 +9,21 @@
 /*   Updated: 2020/06/20 17:49:26 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "include.h"
 
 float	ft_distance(float x, float y, float xend, float yend)
 {
-	return (sqrt((xend - x) * (xend -x) + (yend - y) * (yend - y)));
-
+	return (sqrt((xend - x) * (xend - x) + (yend - y) * (yend - y)));
 }
 
-void	ft_drawline(int X, int Y, float distance, int color, float angle, 
+void	ft_drawline(int x_start, int y_start, float distance, float angle,
 		t_param *param)
 {
-	float i;
-	int x;
-	int y;
-	int longeur;
+	float	i;
+	int		x;
+	int		y;
+	int		longeur;
 
 	longeur = 0;
 	i = 0;
@@ -31,7 +31,7 @@ void	ft_drawline(int X, int Y, float distance, int color, float angle,
 	y = 0;
 	while (i < distance)
 	{
-		param->img.data[(Y + y) * WIN_WIDTH + (X + x)] = color;
+		param->img.data[(y_start + y) * WIN_WIDTH + (x_start + x)] = 0xffff00;
 		x = cos(angle) * longeur;
 		y = sin(angle) * longeur;
 		longeur++;
@@ -39,7 +39,7 @@ void	ft_drawline(int X, int Y, float distance, int color, float angle,
 	}
 }
 
-void	ft_rectangle(int x, int y, int height, int width, int col, t_param *param)
+void	ft_rectangle(int x, int y, int size, int col, t_param *param)
 {
 	int count_y;
 	int count_x;
@@ -50,11 +50,11 @@ void	ft_rectangle(int x, int y, int height, int width, int col, t_param *param)
 	count_x = 0;
 	x_start = x;
 	col_start = col;
-	while (count_y < height)
+	while (count_y < size)
 	{
 		count_x = 0;
 		x = x_start;
-		while(count_x < width)
+		while (count_x < size)
 		{
 			param->img.data[y * WIN_WIDTH + x] = col;
 			count_x++;
@@ -63,10 +63,10 @@ void	ft_rectangle(int x, int y, int height, int width, int col, t_param *param)
 		count_y++;
 		y++;
 	}
-	return;
+	return ;
 }
 
-float	ft_normalizeAngle(float angle)
+float	ft_normalizeangle(float angle)
 {
 	angle = remainder(angle, M_PI * 2);
 	if (angle < 0)
