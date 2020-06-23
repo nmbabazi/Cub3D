@@ -18,7 +18,7 @@ const char	map[MAP_ROWS][MAP_COLS] = {
     "10000000000000010001",
     "10000000000000010001",
     "10000000000000000001",
-    "10000000000000000001",
+    "1000000000000000x001",
     "10000000003000000001",
     "10000000000000000001",
     "10000011100000000001",
@@ -128,6 +128,7 @@ int		main()
 			WIN_HEIGHT, "fuck yeah");
 	ft_initplayer(map, &param);
 	ft_inittexture(&param);
+	ft_initsprite(map, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);

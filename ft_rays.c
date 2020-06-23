@@ -170,4 +170,10 @@ void	ft_castallrays(t_param *param)
 		angle += FOV / NUM_RAYS;
 		id++;
 	}
+/*	id = 0;
+	while (id < NUM_RAYS)
+	{
+		while (param->ray[id].wallhitx != param->sprite.xsprite)
+			id++;
+	}*/
 }

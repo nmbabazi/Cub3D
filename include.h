@@ -84,6 +84,14 @@ typedef	struct	s_texture
 	int		height;
 }				t_texture[4];
 
+typedef struct	s_sprite
+{
+	float	xsprite;
+	float	ysprite;
+	int		sprite_width;
+	int		sprite_height;
+}				t_sprite;
+
 typedef struct	s_param
 {
 	void		*mlx_ptr;
@@ -92,6 +100,7 @@ typedef struct	s_param
 	t_player	player;
 	t_ray		ray;
 	t_texture	texture;
+	t_sprite	sprite;
 }				t_param;
 
 float	ft_distance(float x, float y, float xend, float yend);
@@ -100,7 +109,6 @@ t_param *param);
 void	ft_rectangle(int x, int y, int size, int col, t_param *param);
 float	ft_normalizeangle(float angle);
 void	ft_castallrays(t_param *param);
-//void	ft_castsingleray(t_param *param);
 void	ft_raydirection(t_param *param, float angle, int id);
 void	ft_initrays(t_param *param, int id);
 int		ft_iswall(float x, float y);
@@ -114,5 +122,6 @@ void	ft_puttxt(t_param *param, int y, int x, int end, int i);
 void	ft_rendermap(const char map[13][20], t_param *param);
 int		ft_iswall(float x, float y);
 void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
+void	ft_initsprite(const char map[MAP_ROWS][MAP_COLS], t_param *param);
 
 #endif

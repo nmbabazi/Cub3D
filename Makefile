@@ -9,6 +9,7 @@ SRCS = 	main.c \
 		utiles.c \
 		ft_texture.c \
 		ft_walls.c	\
+		ft_sprite.c	\
 
 OBJSRCS = $(SRCS:.c=.o) 
 
