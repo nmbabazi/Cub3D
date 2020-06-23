@@ -70,9 +70,8 @@ typedef struct	s_ray
 	float	horzhitx;
 	float	verthity;
 	float	verthitx;
-	int		id;
 
-}				t_ray;
+}				t_ray[NUM_RAYS];
 
 typedef	struct	s_texture
 {
@@ -101,19 +100,19 @@ t_param *param);
 void	ft_rectangle(int x, int y, int size, int col, t_param *param);
 float	ft_normalizeangle(float angle);
 void	ft_castallrays(t_param *param);
-void	ft_castsingleray(t_param *param);
-void	ft_raydirection(t_param *param, float angle);
-void	ft_initrays(t_ray *ray);
+//void	ft_castsingleray(t_param *param);
+void	ft_raydirection(t_param *param, float angle, int id);
+void	ft_initrays(t_param *param, int id);
 int		ft_iswall(float x, float y);
 void	ft_renderplayer(t_param *param);
 void	ft_updateplayer(t_param *param);
 void	ft_rendermap(const char map[13][20], t_param *param);
 void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param);
-void	ft_render3d(t_param *param);
+void	ft_render3d(t_param *param, int id);
 void	ft_inittexture(t_param *param);
 void	ft_puttxt(t_param *param, int y, int x, int end, int i);
 void	ft_rendermap(const char map[13][20], t_param *param);
 int		ft_iswall(float x, float y);
-void	ft_drawwall(int walltop, int wallbottom, t_param *param);
+void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
 
 #endif

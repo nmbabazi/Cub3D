@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/22 13:49:54 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/23 16:32:17 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ int		game_loop(t_param *param)
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
-//	ft_rendermap(map, param);
 	ft_castallrays(param);
 	ft_rendermap(map, param);
 	ft_renderplayer(param);

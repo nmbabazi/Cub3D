@@ -42,17 +42,17 @@ void	ft_puttxt(t_param *param, int y, int x, int end, int txt)
 	int distancefromtop;
 	int textureoffsety;
 
-	if (param->ray.washitvert == 1)
-		textureoffsetx = (int)(param->ray.wallhity * param->texture[txt].width /
+	if (param->ray[x].washitvert == 1)
+		textureoffsetx = (int)(param->ray[x].wallhity * param->texture[txt].width /
 			TILE_S) % param->texture[txt].width;
 	else
-		textureoffsetx = (int)(param->ray.wallhitx * param->texture[txt].width /
+		textureoffsetx = (int)(param->ray[x].wallhitx * param->texture[txt].width /
 			TILE_S) % param->texture[txt].width;
 	while (y < end)
 	{
-		distancefromtop = y + (param->ray.wallheight / 2) - (WIN_HEIGHT / 2);
+		distancefromtop = y + (param->ray[x].wallheight / 2) - (WIN_HEIGHT / 2);
 		textureoffsety = distancefromtop * ((float)param->texture[txt].height /
-			param->ray.wallheight);
+			param->ray[x].wallheight);
 		param->img.data[y * WIN_WIDTH + x] = param->texture[txt].data[
 				(textureoffsety * param->texture[txt].width) + textureoffsetx];
 		y++;

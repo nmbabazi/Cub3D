@@ -26,47 +26,47 @@
 	return (0);
 }*/
 
-void	ft_drawwall(int walltop, int wallbottom, t_param *param)
+void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id)
 {
 	int	y;
 
 	y = 0;
 	while (y < walltop)
 	{
-		param->img.data[y * WIN_WIDTH + param->ray.id] = 0xC0C0C0;
+		param->img.data[y * WIN_WIDTH + id] = 0xC0C0C0;
 		y++;
 	}
-	if (param->ray.washitvert == 0 && param->ray.raydown == -1)
-		ft_puttxt(param, walltop, param->ray.id, wallbottom, NO);
-	if (param->ray.washitvert == 0 && param->ray.raydown == 1)
-		ft_puttxt(param, walltop, param->ray.id, wallbottom, SO);
-	if (param->ray.washitvert == 1 && param->ray.rayright == -1)
-		ft_puttxt(param, walltop, param->ray.id, wallbottom, WE);
-	if (param->ray.washitvert == 1 && param->ray.rayright == 1)
-		ft_puttxt(param, walltop, param->ray.id, wallbottom, EA);
+	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == -1)
+		ft_puttxt(param, walltop, id, wallbottom, NO);
+	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == 1)
+		ft_puttxt(param, walltop, id, wallbottom, SO);
+	if (param->ray[id].washitvert == 1 && param->ray[id].rayright == -1)
+		ft_puttxt(param, walltop, id, wallbottom, WE);
+	if (param->ray[id].washitvert == 1 && param->ray[id].rayright == 1)
+		ft_puttxt(param, walltop, id, wallbottom, EA);
 	y = wallbottom;
 	while (y < WIN_HEIGHT)
 	{
-		param->img.data[y * WIN_WIDTH + param->ray.id] = 0x778899;
+		param->img.data[y * WIN_WIDTH + id] = 0x778899;
 		y++;
 	}
 }
 
-void	ft_render3d(t_param *param)
+void	ft_render3d(t_param *param, int id)
 {
 	float	distanceprojection;
 	float	walldistance;
 	int		walltop;
 	int		wallbottom;
 
-	walldistance = param->ray.colldistance *
-		cos(param->ray.rayangle - param->player.rotationangle);
+	walldistance = param->ray[id].colldistance *
+		cos(param->ray[id].rayangle - param->player.rotationangle);
 	distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
-	param->ray.wallheight = (int)((TILE_S / walldistance)
+	param->ray[id].wallheight = (int)((TILE_S / walldistance)
 		* distanceprojection);
-	walltop = (WIN_HEIGHT / 2) - (param->ray.wallheight / 2);
+	walltop = (WIN_HEIGHT / 2) - (param->ray[id].wallheight / 2);
 	walltop = walltop < 0 ? 0 : walltop;
-	wallbottom = (WIN_HEIGHT / 2) + (param->ray.wallheight / 2);
+	wallbottom = (WIN_HEIGHT / 2) + (param->ray[id].wallheight / 2);
 	wallbottom = wallbottom > WIN_HEIGHT ? WIN_HEIGHT : wallbottom;
-	ft_drawwall(walltop, wallbottom, param);
+	ft_drawwall(walltop, wallbottom, param, id);
 }
