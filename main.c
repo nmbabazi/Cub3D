@@ -12,7 +12,7 @@
 
 #include "include.h"
 
-/*const char	map[MAP_ROWS][MAP_COLS] = {
+const char	map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
     "10000000000000010001",
     "10000000000000010001",
@@ -26,7 +26,7 @@
     "10100000000000010001",
     "11000000000000010001",
     "11111111111111111111",
-};*/
+};
 
 void	ft_rendermap(const char map[13][20], t_param *param)
 {
@@ -100,45 +100,6 @@ int		ft_iswall(float x, float y)
 	if (map[indexy][indexx] == '1')
 		return (1);
 	return (0);
-}
-
-void	ft_render3d(t_param *param, float angle, int id)
-{
-	float	distanceprojection;
-	float	walldistance;
-	int		walltop;
-	int		wallbottom;
-	int		y;
-
-	y = 0;
-	walldistance = param->ray.colldistance *
-		cos(angle - param->player.rotationangle);
-	distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
-	param->ray.wallheight = (int)((TILE_S / walldistance)
-		* distanceprojection);
-	walltop = (WIN_HEIGHT / 2) - (param->ray.wallheight / 2);
-	walltop = walltop < 0 ? 0 : walltop;
-	wallbottom = (WIN_HEIGHT / 2) + (param->ray.wallheight / 2);
-	wallbottom = wallbottom > WIN_HEIGHT ? WIN_HEIGHT : wallbottom;
-	while (y < walltop)
-	{
-		param->img.data[y * WIN_WIDTH + id] = 0xC0C0C0;
-		y++;
-	}
-	if (param->ray.washitvert == 0 && param->ray.raydown == -1)
-		ft_puttxt(param, walltop, id, wallbottom, NO);
-	if (param->ray.washitvert == 0 && param->ray.raydown == 1)
-		ft_puttxt(param, walltop, id, wallbottom, SO);
-	if (param->ray.washitvert == 1 && param->ray.rayright == -1)
-		ft_puttxt(param, walltop, id, wallbottom, WE);
-	if (param->ray.washitvert == 1 && param->ray.rayright == 1)
-		ft_puttxt(param, walltop, id, wallbottom, EA);
-	y = wallbottom;
-	while (y < WIN_HEIGHT)
-	{
-		param->img.data[y * WIN_WIDTH + id] = 0x778899;
-		y++;
-	}
 }
 
 int		game_loop(t_param *param)

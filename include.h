@@ -24,6 +24,8 @@
 # define SO 1
 # define EA 2
 # define WE 3
+# define VERT 1
+# define HORZ 0
 # define TILE_S 50
 # define MINIMAP 0.2
 # define MAP_ROWS 13
@@ -64,6 +66,11 @@ typedef struct	s_ray
 	int		rayright;
 	int		washitvert;
 	int		wallheight;
+	float	horzhity;
+	float	horzhitx;
+	float	verthity;
+	float	verthitx;
+	int		id;
 
 }				t_ray;
 
@@ -90,11 +97,11 @@ typedef struct	s_param
 
 float	ft_distance(float x, float y, float xend, float yend);
 void	ft_drawline(int x_start, int y_start, float distance, float angle,
-		t_param *param);
+t_param *param);
 void	ft_rectangle(int x, int y, int size, int col, t_param *param);
 float	ft_normalizeangle(float angle);
 void	ft_castallrays(t_param *param);
-void	ft_castsingleray(t_param *param, int i);
+void	ft_castsingleray(t_param *param);
 void	ft_raydirection(t_param *param, float angle);
 void	ft_initrays(t_ray *ray);
 int		ft_iswall(float x, float y);
@@ -102,10 +109,11 @@ void	ft_renderplayer(t_param *param);
 void	ft_updateplayer(t_param *param);
 void	ft_rendermap(const char map[13][20], t_param *param);
 void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param);
-void	ft_render3d(t_param *param, float angle, int i);
+void	ft_render3d(t_param *param);
 void	ft_inittexture(t_param *param);
 void	ft_puttxt(t_param *param, int y, int x, int end, int i);
 void	ft_rendermap(const char map[13][20], t_param *param);
 int		ft_iswall(float x, float y);
+void	ft_drawwall(int walltop, int wallbottom, t_param *param);
 
 #endif

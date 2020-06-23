@@ -8,6 +8,7 @@ SRCS = 	main.c \
 		ft_player.c \
 		utiles.c \
 		ft_texture.c \
+		ft_walls.c	\
 
 OBJSRCS = $(SRCS:.c=.o) 
 

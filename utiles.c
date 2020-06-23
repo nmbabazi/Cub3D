@@ -73,3 +73,15 @@ float	ft_normalizeangle(float angle)
 		angle = (M_PI * 2) + angle;
 	return (angle);
 }
+
+void	ft_raydirection(t_param *param, float angle)
+{
+	if (angle > 0 && angle < M_PI)
+		param->ray.raydown = 1;
+	else
+		param->ray.raydown = -1;
+	if (angle < (M_PI * 0.5) || angle > (M_PI * 1.5))
+		param->ray.rayright = 1;
+	else
+		param->ray.rayright = -1;
+}
