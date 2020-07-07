@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/20 16:25:52 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/20 17:26:17 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/29 18:31:13 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_inittexture(t_param *param)
 {
 	param->texture[0].ptr = mlx_xpm_file_to_image(param->mlx_ptr,
-		"txt-nord.xpm", &param->texture[0].width, &param->texture[0].height);
+		"txtmax.xpm", &param->texture[0].width, &param->texture[0].height);
 	param->texture[1].ptr = mlx_xpm_file_to_image(param->mlx_ptr,
 		"txt-sud.xpm", &param->texture[1].width, &param->texture[1].height);
 	param->texture[2].ptr = mlx_xpm_file_to_image(param->mlx_ptr,
@@ -43,11 +43,11 @@ void	ft_puttxt(t_param *param, int y, int x, int end, int txt)
 	int textureoffsety;
 
 	if (param->ray[x].washitvert == 1)
-		textureoffsetx = (int)(param->ray[x].wallhity * param->texture[txt].width /
-			TILE_S) % param->texture[txt].width;
+		textureoffsetx = (int)(param->ray[x].wallhity * param->texture[txt].width / TILE_S) % param->texture[txt].width;
 	else
 		textureoffsetx = (int)(param->ray[x].wallhitx * param->texture[txt].width /
 			TILE_S) % param->texture[txt].width;
+//	printf("X %d\n", textureoffsetx);
 	while (y < end)
 	{
 		distancefromtop = y + (param->ray[x].wallheight / 2) - (WIN_HEIGHT / 2);

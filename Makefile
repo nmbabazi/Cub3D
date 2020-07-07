@@ -4,12 +4,12 @@ MLX = -I /usr/local/include -L /usr/local/lib -lmlx -framework OpenGL -framework
 NAME = cub3D
 
 SRCS = 	main.c \
-		ft_rays.c\
+		ft_ray.c\
 		ft_player.c \
 		utiles.c \
 		ft_texture.c \
 		ft_walls.c	\
-		ft_sprite.c	\
+		ft_sprite.c \
 
 OBJSRCS = $(SRCS:.c=.o) 
 

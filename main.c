@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/23 16:32:17 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/29 18:35:28 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ const char	map[MAP_ROWS][MAP_COLS] = {
     "10000000000000010001",
     "10000000000000010001",
     "10000000000000010001",
+    "10000000000000002001",
     "10000000000000000001",
-    "1000000000000000x001",
     "10000000003000000001",
     "10000000000000000001",
     "10000011100000000001",
@@ -59,13 +59,19 @@ int		key_press(int key, void *data)
 	t_param *param;
 
 	param = (t_param *)data;
-	if (key == 124)
+	if (key == KEY_RIGHT)
+	{
 		param->player.turndirection = +1;
-	if (key == 123)
+		param->player.lodev = -1;
+	}
+	if (key == KEY_LEFT)
+	{
 		param->player.turndirection = -1;
-	if (key == 126)
+		param->player.lodev = +1;
+	}
+	if (key == KEY_UP)
 		param->player.walkdirection = 1;
-	if (key == 125)
+	if (key == KEY_DOWN)
 		param->player.walkdirection = -1;
 	if (key == 53)
 		exit(0);
@@ -77,13 +83,19 @@ int		key_release(int key, void *data)
 	t_param *param;
 
 	param = (t_param *)data;
-	if (key == 124)
+	if (key == KEY_RIGHT)
+	{
 		param->player.turndirection = 0;
-	if (key == 123)
+		param->player.lodev = 0;
+	}
+	if (key == KEY_LEFT)
+	{
 		param->player.turndirection = 0;
-	if (key == 126)
+		param->player.lodev = 0;
+	}
+	if (key == KEY_UP)
 		param->player.walkdirection = 0;
-	if (key == 125)
+	if (key == KEY_DOWN)
 		param->player.walkdirection = 0;
 	return (1);
 }
@@ -102,14 +114,30 @@ int		ft_iswall(float x, float y)
 	return (0);
 }
 
+int		ft_issprite(float x, float y)
+{
+	int indexx;
+	int indexy;
+
+	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+		return (1);
+	indexx = floor(x / TILE_S);
+	indexy = floor(y / TILE_S);
+	if (map[indexy][indexx] == '2')
+		return (1);
+	return (0);
+}
+
 int		game_loop(t_param *param)
 {
 	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
-	ft_castallrays(param);
+//	ft_castallrays(param);
 	ft_rendermap(map, param);
+	ft_castallrays(param);
+	ft_putsprite(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
@@ -129,6 +157,10 @@ int		main()
 	ft_initplayer(map, &param);
 	ft_inittexture(&param);
 	ft_initsprite(map, &param);
+	param.dirx = 0;
+	param.diry = 1;
+	param.planx = 0.66;
+	param.plany = 0;
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);

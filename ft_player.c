@@ -50,6 +50,7 @@ void	ft_renderplayer(t_param *param)
 	ft_rectangle((param->player.x - size_player / 2) * MINIMAP,
 		(param->player.y - size_player / 2) * MINIMAP,
 			size_player * MINIMAP, 0xFF0000, param);
+	ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP, 100 * MINIMAP,param->player.rotationangle, param);
 }
 
 void	ft_updateplayer(t_param *param)
@@ -57,12 +58,20 @@ void	ft_updateplayer(t_param *param)
 	float movestep;
 	float newplayerx;
 	float newplayery;
+	float olddirx = param->dirx;
+	float oldplanx = param->planx;
+	float dirangle = param->player.turndirection * param->player.turnspeed;
 
 	param->player.rotationangle += param->player.turndirection *
-		param->player.turnspeed;
+			param->player.turnspeed;
 	movestep = param->player.walkdirection * param->player.walkspeed;
 	newplayerx = param->player.x + cos(param->player.rotationangle) * movestep;
 	newplayery = param->player.y + sin(param->player.rotationangle) * movestep;
+	////////////////////////calculs dir et plan pour les sprites/////////////////////////////////
+	param->dirx = param->dirx * cos(dirangle) - param->diry * sin(dirangle);
+    param->diry = olddirx * sin(dirangle) + param->diry * cos(dirangle);
+	param->planx = param->planx * cos(dirangle) - param->plany * sin(dirangle);
+    param->plany = oldplanx * sin(dirangle) + param->plany * cos(dirangle);
 	if (ft_iswall(newplayerx, newplayery) == 0)
 	{
 		param->player.x = newplayerx;

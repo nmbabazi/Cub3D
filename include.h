@@ -6,7 +6,7 @@
 /*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/22 13:49:57 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/06/29 15:25:41 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@
 # define SO 1
 # define EA 2
 # define WE 3
+# define KEY_LEFT 123
+# define KEY_RIGHT 124
+# define KEY_UP 126
+# define KEY_DOWN 125
 # define VERT 1
 # define HORZ 0
 # define TILE_S 50
@@ -45,6 +49,7 @@ typedef struct	s_player
 	float	rotationangle;
 	float	walkspeed;
 	float	turnspeed;
+	int		lodev;
 }				t_player;
 
 typedef struct	s_img
@@ -86,16 +91,29 @@ typedef	struct	s_texture
 
 typedef struct	s_sprite
 {
-	float	xsprite;
-	float	ysprite;
-	int		sprite_width;
-	int		sprite_height;
+	float	x;
+	float	y;
+	float	distance;
+	float	angle;
+	int		isvisible;
+	void	*ptr;
+	int		*data;
+	int		bpp;
+	int		endian;
+	int		size_l;
+	int		width;
+	int		height;
+	float	buffer[NUM_RAYS];
 }				t_sprite;
 
 typedef struct	s_param
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
+	float		diry;
+	float		dirx;
+	float		plany;
+	float		planx;
 	t_image		img;
 	t_player	player;
 	t_ray		ray;
@@ -123,5 +141,11 @@ void	ft_rendermap(const char map[13][20], t_param *param);
 int		ft_iswall(float x, float y);
 void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
 void	ft_initsprite(const char map[MAP_ROWS][MAP_COLS], t_param *param);
-
+int		ft_issprite(float x, float y);
+void    ft_initsprite(const char map[MAP_ROWS][MAP_COLS], t_param *param);
+void	ft_spritetxt(t_param *param);
+float	ft_angle(t_param *param);
+void	ft_drawsprite(float y_start, float y_end, float sprite_size, t_param *param, int id);
+void	ft_putsprite(t_param *param);
+float	ft_angle(t_param *param);
 #endif

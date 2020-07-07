@@ -21,10 +21,7 @@ void	ft_initrays(t_param *param, int id)
 	param->ray[id].rayright = 0;
 	param->ray[id].washitvert = 0;
 	param->ray[id].wallheight = 0;
-	param->ray[id].horzhity = 0;
-	param->ray[id].horzhitx = 0;
-	param->ray[id].verthity = 0;
-	param->ray[id].verthitx = 0;
+
 }
 
 float	ft_findhorzhit(t_param *param, int id)
@@ -37,6 +34,9 @@ float	ft_findhorzhit(t_param *param, int id)
 	int		horzhit;
 	float	nexthorzy;
 	float	nexthorzx;
+	param->ray[id].horzhity = 0;
+	param->ray[id].horzhitx = 0;
+//	float spritehitdistance;
 
 	yintercept = floor(param->player.y / TILE_S) * TILE_S;
 	if (param->ray[id].raydown == 1)
@@ -53,18 +53,29 @@ float	ft_findhorzhit(t_param *param, int id)
 		xstep *= -1;
 	nexthorzy = yintercept;
 	nexthorzx = xintercept;
-	if (param->ray[id].raydown == -1)
-		nexthorzy--;
+	float	nexthorzycheck = yintercept;
 	while (nexthorzx >= 0 && nexthorzx <= WIN_WIDTH
-		&& nexthorzy >= 0 && nexthorzy <= WIN_HEIGHT)
+		&& nexthorzy >= 0 && nexthorzy <= WIN_HEIGHT &&
+		nexthorzycheck >= 0 && nexthorzycheck <= WIN_HEIGHT)
 	{
-		if (ft_iswall(nexthorzx, nexthorzy) == 1)
+		nexthorzycheck = nexthorzy;
+		if (param->ray[id].raydown == -1)
+			nexthorzycheck--;
+		if (ft_iswall(nexthorzx, nexthorzycheck) == 1)
 		{
 			horzhit = 1;
 			param->ray[id].horzhitx = nexthorzx;
 			param->ray[id].horzhity = nexthorzy;
 			break ;
 		}
+	/*	if (ft_issprite(nexthorzx, nexthorzy) == 1)
+		{
+			horzhit = 2;
+			param->ray[id].horzhitx = nexthorzx;
+			param->ray[id].horzhity = nexthorzy;
+			spritehitdistance = 6 / cos(param->ray[id].rayangle);
+			break ;
+		}*/
 		else
 		{
 			nexthorzx += xstep;
@@ -105,18 +116,28 @@ float	ft_findverthit(t_param *param, int id)
 		ystep *= -1;
 	nextverty = yintercept;
 	nextvertx = xintercept;
-	if (param->ray[id].rayright == -1)
-		nextvertx--;
+	float	nextvertxcheck = xintercept;
 	while (nextvertx >= 0 && nextvertx <= WIN_WIDTH &&
-		nextverty >= 0 && nextverty <= WIN_HEIGHT)
+		nextverty >= 0 && nextverty <= WIN_HEIGHT &&
+		nextvertxcheck >= 0 && nextvertxcheck <= WIN_WIDTH)
 	{
-		if (ft_iswall(nextvertx, nextverty) == 1)
+		nextvertxcheck = nextvertx;
+		if (param->ray[id].rayright == -1)
+			nextvertxcheck--;
+		if (ft_iswall(nextvertxcheck, nextverty) == 1)
 		{
 			verthit = 1;
 			param->ray[id].verthitx = nextvertx;
 			param->ray[id].verthity = nextverty;
 			break ;
 		}
+	/*	if (ft_issprite(nextvertx, nextverty) == 1)
+		{	
+			verthit = 2;
+			param->ray[id].verthitx = nextvertx;
+			param->ray[id].verthity = nextverty;
+			break ;
+		}*/
 		else
 		{
 			nextvertx += xstep;
@@ -150,6 +171,35 @@ void	ft_compdistance(float horzhitdistance,
 	}
 }
 
+
+/*int	ft_spritecollision(int x_sprite, int y_sprite, float distance, float angle,
+		t_param *param)
+{
+	float	i;
+	int		x;
+	int		y;
+	int		longeur;
+
+	longeur = 0;
+	i = 0;
+	x = 0;
+	y = 0;
+	while (i < distance)
+	{
+	//	param->img.data[(y_start + y) * WIN_WIDTH + (x_start + x)] = 0xffff00;
+		if((x <= param->sprite.xsprite - (param->sprite.sprite_width / 2) &&
+		x >= param->sprite.xsprite + (param->sprite.sprite_width / 2)) &&
+		(y <= param->sprite.ysprite - (param->sprite.sprite_height / 2) &&
+		y >= param->sprite.ysprite + (param->sprite.sprite_height / 2)))
+			return (1);
+		x = cos(angle) * longeur;
+		y = sin(angle) * longeur;
+		longeur++;
+		i++;
+	}
+	return (0);
+}*/
+
 void	ft_castallrays(t_param *param)
 {
 	int		id;
@@ -166,14 +216,12 @@ void	ft_castallrays(t_param *param)
 		ft_drawline(param->player.x * MINIMAP, param->player.y *
 			MINIMAP, param->ray[id].colldistance * MINIMAP,
 			param->ray[id].rayangle, param);
-		ft_render3d(param, id);
+	//	ft_render3d(param, id);
+	/*	if (ft_spritecollision(param->sprite.xsprite * MINIMAP, param->sprite.ysprite *
+			MINIMAP, param->ray[id].colldistance * MINIMAP,
+			param->ray[id].rayangle, param) == 1)
+			printf("HERE\n");*/
 		angle += FOV / NUM_RAYS;
 		id++;
 	}
-/*	id = 0;
-	while (id < NUM_RAYS)
-	{
-		while (param->ray[id].wallhitx != param->sprite.xsprite)
-			id++;
-	}*/
 }
