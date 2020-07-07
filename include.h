@@ -39,6 +39,7 @@
 # define FOV 60 * (M_PI / 180)
 # define COLS_S 1
 # define NUM_RAYS (WIN_WIDTH / COLS_S)
+# define NUM_SPRITE 3
 
 typedef struct	s_player
 {
@@ -91,11 +92,12 @@ typedef	struct	s_texture
 
 typedef struct	s_sprite
 {
-	float	x;
-	float	y;
-	float	distance;
+	float	x[NUM_SPRITE];
+	float	y[NUM_SPRITE];
+	float	distance[NUM_SPRITE];
+	int		order[NUM_SPRITE];
 	float	angle;
-	int		isvisible;
+	int		isvisible[NUM_SPRITE];
 	void	*ptr;
 	int		*data;
 	int		bpp;

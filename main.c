@@ -19,11 +19,11 @@ const char	map[MAP_ROWS][MAP_COLS] = {
     "10000000000000010001",
     "10000000000000002001",
     "10000000000000000001",
-    "10000000003000000001",
+    "10000000003000002001",
     "10000000000000000001",
     "10000011100000000001",
     "10000000000000010001",
-    "10100000000000010001",
+    "10100000200000010001",
     "11000000000000010001",
     "11111111111111111111",
 };
@@ -134,9 +134,9 @@ int		game_loop(t_param *param)
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
-//	ft_castallrays(param);
-	ft_rendermap(map, param);
 	ft_castallrays(param);
+	ft_rendermap(map, param);
+//	ft_castallrays(param);
 	ft_putsprite(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
@@ -159,7 +159,7 @@ int		main()
 	ft_initsprite(map, &param);
 	param.dirx = 0;
 	param.diry = 1;
-	param.planx = 0.60;
+	param.planx = 0.6;
 	param.plany = 0;
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);

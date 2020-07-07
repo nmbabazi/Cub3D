@@ -30,13 +30,13 @@ void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id)
 {
 	int	y;
 
-//	y = 0;
-	y = walltop;
-/*	while (y < walltop)
+	y = 0;
+//	y = walltop;
+	while (y < walltop)
 	{
 		param->img.data[y * WIN_WIDTH + id] = 0xC0C0C0;
 		y++;
-	}*/
+	}
 	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == -1)
 		ft_puttxt(param, walltop, id, wallbottom, NO);
 	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == 1)
