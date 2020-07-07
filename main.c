@@ -159,7 +159,7 @@ int		main()
 	ft_initsprite(map, &param);
 	param.dirx = 0;
 	param.diry = 1;
-	param.planx = 0.66;
+	param.planx = 0.60;
 	param.plany = 0;
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);

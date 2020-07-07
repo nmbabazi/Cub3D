@@ -160,13 +160,14 @@ void	ft_putsprite(t_param *param)
 
 void	ft_putsprite(t_param *param)
 {
-		int		textureoffsetx;
-		int		distancefromtop;
-		int		textureoffsety;
-		float distanceprojection;
-		int sprite;
-		float sprite_size;
-		int y;
+	int		textureoffsetx;
+	int		distancefromtop;
+	int		textureoffsety;
+	float distanceprojection;
+	int sprite;
+	float sprite_size;
+	int y;
+	int id = 0;
 	param->sprite.angle = ft_angle(param);
 	param->sprite.distance = ft_distance(param->player.x, param->player.y, param->sprite.x, param->sprite.y);
 		distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
@@ -179,55 +180,37 @@ void	ft_putsprite(t_param *param)
 		float invDet = 1.0 / (param->planx * param->diry - param->dirx * param->plany);
 		float transformX = invDet * (param->diry * spriteX - param->dirx * spriteY);
      	float transformY = invDet * (-param->plany * spriteX + param->planx * spriteY);
-		int spriteScreenX = (int)((WIN_WIDTH / 2) * (1 + transformX / transformY));
-	//	printf("%f\n", transformX);
+		int spriteScreenX = (int)((WIN_WIDTH / 2) * (1 + -transformX / transformY));
 
-	//	int spriteHeight = abs((int)(WIN_HEIGHT / (transformY)));
 		int spriteHeight = sprite_size;
       	int drawStartY = -spriteHeight / 2 + WIN_HEIGHT / 2;
     	if(drawStartY < 0) drawStartY = 0;
     	int drawEndY = spriteHeight / 2 + WIN_HEIGHT / 2;
     	if(drawEndY >= WIN_HEIGHT) drawEndY = WIN_HEIGHT - 1;
 
-	//	int spriteWidth = abs((int)(WIN_HEIGHT / (transformY)));
 		int spriteWidth = sprite_size;
       	int drawStartX = -spriteWidth / 2 + spriteScreenX;
      	if(drawStartX < 0) drawStartX = 0;
       	int drawEndX = spriteWidth / 2 + spriteScreenX;
      	if(drawEndX >= WIN_WIDTH) drawEndX = WIN_WIDTH - 1;
 		
-	//	printf("%d**%d\n", drawEndX, drawStartX);
 		sprite = drawStartX;
 		while (sprite < drawEndX)
 		{
-		//	printf("%d**%d\n", drawStartY, drawEndY);
-		//	printf("OK\n");
-		//	printf("%f**%d\n", transformY, drawStartX);
-		//	printf("**********************\n");
-		//	printf("%d**%d\n", sprite, drawEndX);
 			if(transformY > 0 && drawStartX > 0 && drawStartX < WIN_WIDTH)
 			{
-			
-			//	printf("%d\n", drawEndY);
-			//	printf("%d**%d\n", drawStartY, drawEndY);
 				y = drawStartY;
 				while (y < drawEndY)
 				{
-			//		printf("--------\n");
-			//		printf("%d**%d\n", drawStartY, drawEndY);
-			/*		distancefromtop = drawStartY + (spriteHeight / 2) - (WIN_HEIGHT / 2);
-					textureoffsetx = (int)(drawStartX * param->sprite.width / spriteHeight);
-					textureoffsety = distancefromtop * ((float)param->sprite.height / spriteHeight);
+					textureoffsetx = (int)(256 * (sprite - (-sprite_size / 2 + spriteScreenX)) * param->sprite.width / sprite_size) / 256;
+					distancefromtop = (y) * 256 - WIN_HEIGHT * 128 + sprite_size * 128;
+					textureoffsety = ((distancefromtop * param->sprite.height) / sprite_size) / 256;
 					int color = param->sprite.data[(textureoffsety * param->sprite.width) + textureoffsetx];
-					param->img.data[drawStartY * WIN_WIDTH + drawStartX] = color;*/
-			//		printf("%d**%d\n", drawStartX, drawStartY);
-					param->img.data[y * WIN_WIDTH + sprite] = 0xf7ff3c;
+					param->img.data[y * WIN_WIDTH + sprite] = color;
 					y++;
 				}
-		//		printf("---------\n");
 			}
 			sprite++;
 		}
-	//	printf("******************\n");
 	}
 }
