@@ -15,14 +15,14 @@
 const char	map[MAP_ROWS][MAP_COLS] = {
     "11111111111111111111",
     "10000000000000010001",
-    "10000000000000010001",
-    "10000000000000010001",
-    "10000000000000002001",
+    "11111100000000010001",
+    "10020000000000010001",
+    "10002000000000002001",
     "10000000000000000001",
     "10000000003000002001",
     "10000000000000000001",
     "10000011100000000001",
-    "10000000000000010001",
+    "10020000000000010001",
     "10100000200000010001",
     "11000000000000010001",
     "11111111111111111111",
@@ -59,20 +59,36 @@ int		key_press(int key, void *data)
 	t_param *param;
 
 	param = (t_param *)data;
-	if (key == KEY_RIGHT)
+	if (key == CAM_RIGHT)
 	{
 		param->player.turndirection = +1;
 		param->player.lodev = -1;
 	}
-	if (key == KEY_LEFT)
+	if (key == CAM_LEFT)
 	{
 		param->player.turndirection = -1;
 		param->player.lodev = +1;
 	}
-	if (key == KEY_UP)
-		param->player.walkdirection = 1;
-	if (key == KEY_DOWN)
+		if (key == KEY_LEFT)
+	{
 		param->player.walkdirection = -1;
+		param->player.velocity = -1;
+	}
+	if (key == KEY_RIGHT)
+	{
+		param->player.walkdirection = 1;
+		param->player.velocity = +1;
+	}
+	if (key == KEY_UP)
+	{
+		param->player.walkdirection = 1;
+		param->player.velocity = 0;
+	}
+	if (key == KEY_DOWN)
+	{
+		param->player.walkdirection = -1;
+		param->player.velocity = 0;
+	}
 	if (key == 53)
 		exit(0);
 	return (1);
@@ -83,20 +99,36 @@ int		key_release(int key, void *data)
 	t_param *param;
 
 	param = (t_param *)data;
-	if (key == KEY_RIGHT)
+	if (key == CAM_RIGHT)
+	{
+		param->player.turndirection = 0;
+		param->player.lodev = 0;
+	}
+	if (key == CAM_LEFT)
 	{
 		param->player.turndirection = 0;
 		param->player.lodev = 0;
 	}
 	if (key == KEY_LEFT)
 	{
-		param->player.turndirection = 0;
-		param->player.lodev = 0;
+		param->player.walkdirection = 0;
+		param->player.velocity = 0;
+	}
+	if (key == KEY_RIGHT)
+	{
+		param->player.walkdirection = 0;
+		param->player.velocity = 0;
 	}
 	if (key == KEY_UP)
+	{
 		param->player.walkdirection = 0;
+		param->player.velocity = 0;
+	}
 	if (key == KEY_DOWN)
+	{
 		param->player.walkdirection = 0;
+		param->player.velocity = 0;
+	}
 	return (1);
 }
 

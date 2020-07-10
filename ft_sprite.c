@@ -59,26 +59,41 @@ void	ft_spritetxt(t_param *param)
 }
 
 
-int	ft_spritehere(t_param *param, int id)
+int	ft_spritevisible(t_param *param, int id, float sprite_size)
 {
 	float	vectX;
 	float	vectY;
+	float	vectX_end;
+	float	vectY_end;
 	float	playertospriteangle;
+	float	playertospriteangle_end;
 	float 	spriteangle;
-	float playerangle;
+	float 	spriteangle_end;
+	float	playerangle;
 
 	vectX = param->sprite.x[id] - param->player.x;
 	vectY = param->sprite.y[id] - param->player.y;
+	vectX_end = (param->sprite.x[id] + sprite_size) - param->player.x;
+	vectY_end = (param->sprite.y[id] + sprite_size) - param->player.y;
 	playertospriteangle  = atan2(vectY, vectX);
+	playertospriteangle_end  = atan2(vectY_end, vectX_end);
 	playerangle = ft_normalizeangle(param->player.rotationangle);
 	spriteangle = playerangle - playertospriteangle;
+	spriteangle_end = playerangle - playertospriteangle_end;
 			
 	if (spriteangle < -3.14159)
 			spriteangle += 2.0 * 3.14159;
 	if (spriteangle > 3.14159)
 			spriteangle -= 2.0 * 3.14159;
+	if (spriteangle_end < -3.14159)
+			spriteangle_end += 2.0 * 3.14159;
+	if (spriteangle_end > 3.14159)
+			spriteangle_end -= 2.0 * 3.14159;
 	spriteangle = fabs(spriteangle);
-	if(spriteangle < FOV / 2)
+	spriteangle_end = fabs(spriteangle_end);
+	float wallspriteangle = fabs(spriteangle_end - spriteangle);
+	float fovSprite = FOV / 2 + wallspriteangle;
+	if(spriteangle < fovSprite)
 		return (1);
 	else
 		return (0);
@@ -144,11 +159,10 @@ void	ft_putsprite(t_param *param)
 
 	while (id < NUM_SPRITE)
 	{
-	//	param->sprite.isvisible[id] = ft_spritehere(param);
-		if (ft_spritehere(param, id) == 1)
+		distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
+		sprite_size = (TILE_S * 0.5 / param->sprite.distance[id]) * distanceprojection;
+		if (ft_spritevisible(param, id, sprite_size) == 1)
 		{
-			distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
-			sprite_size = (TILE_S * 0.5 / param->sprite.distance[id]) * distanceprojection;
 			float spriteX = param->sprite.x[id] - param->player.x;
 			float spriteY = param->sprite.y[id] - param->player.y;
 			float invDet = 1.0 / (param->planx * param->diry - param->dirx * param->plany);

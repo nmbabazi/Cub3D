@@ -37,6 +37,7 @@ void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param)
 	param->player.rotationangle = M_PI / 2;
 	param->player.walkspeed = 2;
 	param->player.turnspeed = 2 * (M_PI / 180);
+	param->player.facingvert = 0;
 	return ;
 }
 
@@ -53,6 +54,15 @@ void	ft_renderplayer(t_param *param)
 	ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP, 100 * MINIMAP,param->player.rotationangle, param);
 }
 
+void	ft_playerdirection(t_param *param, float angle_start)
+{
+	float angle = ft_normalizeangle(angle_start);
+	if ((angle > M_PI * 0.25 && angle < 0.75 * M_PI) || (angle > M_PI * 1.25 && angle < 1.75 * M_PI))
+		param->player.facingvert = 1;
+	else	
+		param->player.facingvert = 0;
+}
+
 void	ft_updateplayer(t_param *param)
 {
 	float movestep;
@@ -61,12 +71,28 @@ void	ft_updateplayer(t_param *param)
 	float olddirx = param->dirx;
 	float oldplanx = param->planx;
 	float dirangle = param->player.turndirection * param->player.turnspeed;
+	float angleangle;
 
 	param->player.rotationangle += param->player.turndirection *
 			param->player.turnspeed;
+	angleangle = (M_PI * 0.5) - param->player.rotationangle;
 	movestep = param->player.walkdirection * param->player.walkspeed;
-	newplayerx = param->player.x + cos(param->player.rotationangle) * movestep;
-	newplayery = param->player.y + sin(param->player.rotationangle) * movestep;
+	ft_playerdirection(param, param->player.rotationangle);
+	if (param->player.velocity != 0 && param->player.facingvert == 0)
+	{
+		newplayerx = param->player.x - cos(angleangle) * movestep;
+		newplayery = param->player.y + sin(angleangle) * movestep;
+	}
+	if (param->player.velocity != 0 && param->player.facingvert == 1)
+	{
+		newplayerx = param->player.x + cos(angleangle) * -movestep;
+		newplayery = param->player.y - sin(angleangle) * -movestep;
+	}
+	if (param->player.velocity == 0)
+	{
+		newplayerx = param->player.x + cos(param->player.rotationangle) * movestep;
+		newplayery = param->player.y + sin(param->player.rotationangle) * movestep;
+	}
 	////////////////////////calculs dir et plan pour les sprites/////////////////////////////////
 	param->dirx = param->dirx * cos(dirangle) - param->diry * sin(dirangle);
     param->diry = olddirx * sin(dirangle) + param->diry * cos(dirangle);

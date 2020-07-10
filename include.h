@@ -24,10 +24,12 @@
 # define SO 1
 # define EA 2
 # define WE 3
-# define KEY_LEFT 123
-# define KEY_RIGHT 124
-# define KEY_UP 126
-# define KEY_DOWN 125
+# define CAM_LEFT 123
+# define CAM_RIGHT 124
+# define KEY_LEFT 0
+# define KEY_RIGHT 2
+# define KEY_UP 13
+# define KEY_DOWN 1
 # define VERT 1
 # define HORZ 0
 # define TILE_S 50
@@ -39,7 +41,7 @@
 # define FOV 60 * (M_PI / 180)
 # define COLS_S 1
 # define NUM_RAYS (WIN_WIDTH / COLS_S)
-# define NUM_SPRITE 3
+# define NUM_SPRITE 6
 
 typedef struct	s_player
 {
@@ -51,6 +53,8 @@ typedef struct	s_player
 	float	walkspeed;
 	float	turnspeed;
 	int		lodev;
+	int 	velocity;
+	int		facingvert;	
 }				t_player;
 
 typedef struct	s_img
