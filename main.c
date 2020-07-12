@@ -132,6 +132,15 @@ int		key_release(int key, void *data)
 	return (1);
 }
 
+int		exit_properly(void *data)
+{
+	t_param *param;
+
+	param = (t_param *)data;
+	exit(0);
+	return (1);
+}
+
 int		ft_iswall(float x, float y)
 {
 	int indexx;
@@ -142,20 +151,6 @@ int		ft_iswall(float x, float y)
 	indexx = floor(x / TILE_S);
 	indexy = floor(y / TILE_S);
 	if (map[indexy][indexx] == '1')
-		return (1);
-	return (0);
-}
-
-int		ft_issprite(float x, float y)
-{
-	int indexx;
-	int indexy;
-
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
-		return (1);
-	indexx = floor(x / TILE_S);
-	indexy = floor(y / TILE_S);
-	if (map[indexy][indexx] == '2')
 		return (1);
 	return (0);
 }
@@ -185,7 +180,7 @@ int		main()
 
 	param.mlx_ptr = mlx_init();
 	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH,
-			WIN_HEIGHT, "fuck yeah");
+			WIN_HEIGHT, "Cub3D");
 	ft_initplayer(map, &param);
 	ft_inittexture(&param);
 	ft_initsprite(map, &param);
@@ -193,6 +188,7 @@ int		main()
 	param.diry = 1;
 	param.planx = 0.6;
 	param.plany = 0;
+	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
