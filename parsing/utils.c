@@ -11,7 +11,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.h"
+#include "parsing.h"
 
 void	ft_putchar(char c)
 {
@@ -99,4 +99,34 @@ void	ft_bzero(void *s, size_t n)
 		p[i] = '\0';
 		i++;
 	}
+}
+
+int		ft_putnbr_base(unsigned int nbr, char *base)
+{
+	unsigned int	length;
+	unsigned int	j;
+	int				count;
+
+	length = 0;
+	count = 0;
+	while (base[length])
+	{
+		if (base[length] < 32)
+			return (count);
+		if (base[length] == '+' || base[length] == '-')
+			return (count);
+		j = length;
+		while (base[++j])
+			if (base[length] == base[j])
+				return (count);
+		length++;
+	}
+	if (length <= 1)
+		return (count);
+	if (nbr >= length)
+		count += ft_putnbr_base(nbr / length, base);
+//	count += write(1, &base[nbr % length], 1);
+	count += nbr % length;
+	printf("count %x\n", count);
+	return (count);
 }

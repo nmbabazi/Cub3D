@@ -155,6 +155,42 @@ int		ft_iswall(float x, float y)
 	return (0);
 }
 
+void	ft_initvecteur(t_param *param)
+{
+	float angledown = 0.5 * M_PI;
+	float angleeast = 0;
+	float anglewest = M_PI;
+	float angleup = 1.5 * M_PI;
+	if (param->player.rotationangle == angleeast)
+	{
+		param->dirx = 1;
+		param->diry = 0;
+		param->planx = 0;
+		param->plany = -0.6;
+	}
+	if (param->player.rotationangle == angledown)
+	{
+		param->dirx = 0;
+		param->diry = 1;
+		param->planx = 0.6;
+		param->plany = 0;
+	}
+	if (param->player.rotationangle == anglewest)
+	{
+		param->dirx = -1;
+		param->diry = 0;
+		param->planx = 0;
+		param->plany = 0.6;
+	}
+	if (param->player.rotationangle == angleup)
+	{
+		param->dirx = 0;
+		param->diry = -1;
+		param->planx = -0.6;
+		param->plany = 0;
+	}
+}
+
 int		game_loop(t_param *param)
 {
 	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
@@ -167,32 +203,34 @@ int		game_loop(t_param *param)
 	ft_putsprite(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
+	if (param->argument == 2)
+	{
+		ft_save(param, "save.bmp");
+		exit_properly(param);
+	}
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
 			0, 0);
 	mlx_destroy_image(param->mlx_ptr, param->img.img_ptr);
 	return (1);
 }
 
-int		main()
+int	main(int ac, char **av)
 {
 	t_param		param;
-	t_player	player;
 
+	ft_parsing(av[1], &param);
+/*	param.argument = ac;
 	param.mlx_ptr = mlx_init();
-	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH,
-			WIN_HEIGHT, "Cub3D");
+	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
 	ft_initplayer(map, &param);
 	ft_inittexture(&param);
 	ft_initsprite(map, &param);
-	param.dirx = 0;
-	param.diry = 1;
-	param.planx = 0.6;
-	param.plany = 0;
+	ft_initvecteur(&param);
 	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 //	system("leaks cub3D");
-	mlx_loop(param.mlx_ptr);
+	mlx_loop(param.mlx_ptr);*/
 	return (1);
 }

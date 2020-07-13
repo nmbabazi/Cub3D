@@ -9,8 +9,8 @@
 /*   Updated: 2020/01/08 08:36:04 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef INCLUDE_H
-# define INCLUDE_H
+#ifndef PARSING_H
+# define PARSING_H
 
 # include <unistd.h>
 # include <stdio.h>
@@ -29,5 +29,6 @@ char	*ft_strdup(char *src);
 int	ft_verifline(char *line);
 void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
+int		ft_putnbr_base(unsigned int nbr, char *base);
 
 #endif

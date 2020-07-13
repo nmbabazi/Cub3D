@@ -47,7 +47,6 @@ void	ft_puttxt(t_param *param, int y, int x, int end, int txt)
 	else
 		textureoffsetx = (int)(param->ray[x].wallhitx * param->texture[txt].width /
 			TILE_S) % param->texture[txt].width;
-//	printf("X %d\n", textureoffsetx);
 	while (y < end)
 	{
 		distancefromtop = y + (param->ray[x].wallheight / 2) - (WIN_HEIGHT / 2);

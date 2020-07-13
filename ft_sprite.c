@@ -165,6 +165,7 @@ void	ft_putsprite(t_param *param)
 		{
 			float spriteX = param->sprite.x[id] - param->player.x;
 			float spriteY = param->sprite.y[id] - param->player.y;
+	//		printf("spriteX = %f     spriteY = %f\n",spriteX, spriteY);
 			float invDet = 1.0 / (param->planx * param->diry - param->dirx * param->plany);
 			float transformX = invDet * (param->diry * spriteX - param->dirx * spriteY);
 			float transformY = invDet * (-param->plany * spriteX + param->planx * spriteY);
@@ -185,7 +186,7 @@ void	ft_putsprite(t_param *param)
 			sprite = drawStartX;
 			while (sprite < drawEndX)
 			{
-				if(transformY > 0 && drawStartX > 0 && drawStartX < WIN_WIDTH && transformY < param->sprite.buffer[sprite])
+				if(transformY > 0 && sprite > 0 && sprite < WIN_WIDTH && transformY < param->sprite.buffer[sprite])
 				{
 					y = drawStartY;
 					while (y < drawEndY)

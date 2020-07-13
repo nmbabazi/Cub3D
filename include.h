@@ -13,17 +13,22 @@
 #ifndef INCLUDE_H
 # define INCLUDE_H
 
-# include "mlx.h"
+# include "./minilibx_opengl_20191021/mlx.h"
+# include "parsing/parsing.h"
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
 # include <math.h>
+# include <fcntl.h>
+# include <pthread.h>
+
 
 # define NO 0
 # define SO 1
 # define EA 2
 # define WE 3
+# define S 4
 # define CAM_LEFT 123
 # define CAM_RIGHT 124
 # define KEY_LEFT 0
@@ -92,6 +97,7 @@ typedef	struct	s_texture
 	int		size_l;
 	int		width;
 	int		height;
+	char	*path;
 }				t_texture[4];
 
 typedef struct	s_sprite
@@ -109,8 +115,16 @@ typedef struct	s_sprite
 	int		size_l;
 	int		width;
 	int		height;
+	char	*path;
+	char	**map;
 	float	buffer[NUM_RAYS];
 }				t_sprite;
+
+typedef	struct	s_list
+{
+	char		*str;
+	struct s_map	*next;
+}				t_list;		
 
 typedef struct	s_param
 {
@@ -120,12 +134,40 @@ typedef struct	s_param
 	float		dirx;
 	float		plany;
 	float		planx;
+	int			win_width;
+	int			win_height;
+	int			f_color;
+	int			c_color;
 	t_image		img;
 	t_player	player;
 	t_ray		ray;
 	t_texture	texture;
 	t_sprite	sprite;
+	int			argument;
 }				t_param;
+
+typedef	struct	s_file_header
+{
+	char			type[2];
+	unsigned int	size;
+	unsigned int	reserved;
+	unsigned int	offset;
+}				t_file_header;
+
+typedef struct		s_info_header
+{
+	unsigned int	size;
+	int				width;
+	int				height;
+	unsigned short	planes;
+	unsigned short	bpp;
+	unsigned int	compression;
+	unsigned int	img_size;
+	int				x_ppm;
+	int				y_ppm;
+	unsigned int	total_color;
+	unsigned int	important_color;
+}					t_info_header;
 
 float	ft_distance(float x, float y, float xend, float yend);
 void	ft_drawline(int x_start, int y_start, float distance, float angle,
@@ -154,4 +196,8 @@ float	ft_angle(t_param *param);
 void	ft_drawsprite(float y_start, float y_end, float sprite_size, t_param *param, int id);
 void	ft_putsprite(t_param *param);
 float	ft_angle(t_param *param);
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void    ft_save(t_param *param, char *name);
+void	ft_writecolor(int fd, t_param *param);
 #endif
