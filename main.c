@@ -12,23 +12,7 @@
 
 #include "include.h"
 
-const char	map[MAP_ROWS][MAP_COLS] = {
-    "11111111111111111111",
-    "10000000000000010001",
-    "11111100000000010001",
-    "10020000000000010001",
-    "10002000000000002001",
-    "10000000000000000001",
-    "10000000003000002001",
-    "10000000000000000001",
-    "10000011100000000001",
-    "10020000000000010001",
-    "10100000200000010001",
-    "11000000000000010001",
-    "11111111111111111111",
-};
-
-void	ft_rendermap(const char map[13][20], t_param *param)
+void	ft_rendermap(t_param *param)
 {
 	int i;
 	int l;
@@ -37,17 +21,17 @@ void	ft_rendermap(const char map[13][20], t_param *param)
 	i = 0;
 	l = 0;
 	col = 0x000000;
-	while (l < MAP_ROWS)
+	while (l < param->map_rows)
 	{
 		i = 0;
-		while (i < MAP_COLS)
+		while (i < param->map_cols)
 		{
-			if (map[l][i] == '1')
+			if (param->map[l][i] == '1')
 				col = 0xFFFFFF;
-			else if (map[l][i] != '1')
+			else if (param->map[l][i] != '1')
 				col = 0x000000;
-			ft_rectangle(i * TILE_S * MINIMAP, l * TILE_S * MINIMAP,
-					TILE_S * MINIMAP, col, param);
+			ft_rectangle(i * param->tile_s  * MINIMAP, l * param->tile_s * MINIMAP,
+					param->tile_s * MINIMAP, col, param);
 			i++;
 		}
 		l++;
@@ -141,16 +125,16 @@ int		exit_properly(void *data)
 	return (1);
 }
 
-int		ft_iswall(float x, float y)
+int		ft_iswall(float x, float y, t_param *param)
 {
 	int indexx;
 	int indexy;
 
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+	if (x < 0 || x > param->map_cols * param->tile_s || y < 0 || y > param->map_rows * param->tile_s)
 		return (1);
-	indexx = floor(x / TILE_S);
-	indexy = floor(y / TILE_S);
-	if (map[indexy][indexx] == '1')
+	indexx = floor(x / param->tile_s);
+	indexy = floor(y / param->tile_s);
+	if (param->map[indexy][indexx] == '1')
 		return (1);
 	return (0);
 }
@@ -193,17 +177,16 @@ void	ft_initvecteur(t_param *param)
 
 int		game_loop(t_param *param)
 {
-	param->img.img_ptr = mlx_new_image(param->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	param->img.img_ptr = mlx_new_image(param->mlx_ptr, param->win_width, param->win_height);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 			&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
 	ft_castallrays(param);
-	ft_rendermap(map, param);
-//	ft_castallrays(param);
+	ft_rendermap(param);
 	ft_putsprite(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
-	if (param->argument == 2)
+	if (param->argument == 3)
 	{
 		ft_save(param, "save.bmp");
 		exit_properly(param);
@@ -219,18 +202,18 @@ int	main(int ac, char **av)
 	t_param		param;
 
 	ft_parsing(av[1], &param);
-/*	param.argument = ac;
+	param.argument = ac;
 	param.mlx_ptr = mlx_init();
-	param.win_ptr = mlx_new_window(param.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
-	ft_initplayer(map, &param);
+	param.win_ptr = mlx_new_window(param.mlx_ptr, param.win_width, param.win_height, "Cub3D");
+	ft_initplayer(&param);
 	ft_inittexture(&param);
-	ft_initsprite(map, &param);
+	ft_initsprite(&param);
 	ft_initvecteur(&param);
 	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 //	system("leaks cub3D");
-	mlx_loop(param.mlx_ptr);*/
+	mlx_loop(param.mlx_ptr);
 	return (1);
 }

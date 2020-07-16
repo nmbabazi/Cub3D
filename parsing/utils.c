@@ -13,26 +13,6 @@
 
 #include "parsing.h"
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
-void	ft_putstr(char *s)
-{
-	int i;
-
-	i = 0;
-	if (s)
-	{
-		while (s[i])
-		{
-			ft_putchar(s[i]);
-			i++;
-		}
-	}
-}
-
 int	ft_verifline(char *line)
 {
 	int i;
@@ -47,11 +27,39 @@ int	ft_verifline(char *line)
 		return (0);
 	while(line[i] && ((line[i] >= 'a' && line[i] <= 'z') || line[i] == '_'))
 		i++;
+	while (line[i] != '\0')
+	{
+		if (line[i] == '/')
+		{
+			i++;
+			if (!(line[i] || ((line[i] >= 'a' && line[i] <= 'z') || line[i] == '_')))
+				return (0);
+			while(line[i] && ((line[i] >= 'a' && line[i] <= 'z') || line[i] == '_'))
+				i++;
+		}
+		if (line[i] == '.')
+			break;
+		i++;
+	}
+	if (line[i] == '.')
+	{
+		i++;
+		if (line[i] != 'x')
+			return (0);
+		i++;
+		if (line[i] != 'p')
+			return (0);
+		i++;
+		if (line[i] != 'm')
+			return (0);
+		i++;
+	}
 	if (line[i] != '\0')
 		return (0);
 	return (1);
 	
 }
+
 char	*ft_strdup(char *src)
 {
 	int		i;
@@ -101,32 +109,102 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-int		ft_putnbr_base(unsigned int nbr, char *base)
+int	ft_lstsize(t_list *lst)
 {
-	unsigned int	length;
-	unsigned int	j;
-	int				count;
+	int	size;
 
-	length = 0;
-	count = 0;
-	while (base[length])
+	size = 0;
+	while (lst)
 	{
-		if (base[length] < 32)
-			return (count);
-		if (base[length] == '+' || base[length] == '-')
-			return (count);
-		j = length;
-		while (base[++j])
-			if (base[length] == base[j])
-				return (count);
-		length++;
+		size++;
+		lst = lst->next;
 	}
-	if (length <= 1)
-		return (count);
-	if (nbr >= length)
-		count += ft_putnbr_base(nbr / length, base);
-//	count += write(1, &base[nbr % length], 1);
-	count += nbr % length;
-	printf("count %x\n", count);
-	return (count);
+	return (size);
+}
+
+int	ft_definedirection(char *line)
+{
+	int i = 0;
+	int n = 22;
+	if (line[i] == 'N' && line [i + 1] == 'O')
+		n = NO;
+	if (line[i] == 'S' && line [i + 1] == 'O')
+		n = SO;
+	if (line[i] == 'W' && line [i + 1] == 'E')
+		n = WE;
+	if (line[i] == 'E' && line [i + 1] == 'A')
+		n = EA;
+	if (line[i] == 'S' && line [i + 1] == 32)
+		n = S;
+	return (n);
+}
+
+void	ft_freestr(char *str)
+{
+	free(str);
+}
+
+void	ft_lstclear(t_list **lst, void (*del)(char *))
+{
+	t_list	*current;
+	t_list	*previous;
+
+	if (lst)
+	{
+		current = *lst;
+		while (current)
+		{
+			previous = current;
+			current = current->next;
+			(*del)(previous->str);
+			free(previous);
+			previous = 0;
+		}
+	}
+	*lst = 0;
+}
+
+int	ft_getlen(t_list *maps)
+{
+	int i;
+	int len;
+
+	i = 0;
+	len = 0;
+	while (maps)
+	{
+		while (maps->str[i])
+			i++;
+		if (i > len)
+			len = i;
+		maps = maps->next;
+	}
+	return (len);
+}
+
+t_list	*add_link(t_list *maps, char *line)
+{
+	t_list	*tmp;
+	char *swp;
+
+	if (!(tmp = (t_list *)malloc(sizeof(t_list) * 1)))
+		return (NULL);
+	if (tmp)
+	{
+		tmp->str = ft_strdup(line);
+		tmp->next = maps;
+	}
+	return (tmp);
+}
+
+int		*ft_createtab(int *tab)
+{
+	int i;
+
+	i = 0;
+	if (!(tab = malloc(sizeof(int) * 3)))
+		return (NULL);
+	while (i < 3)
+		tab[i++] = 0;
+	return (tab);
 }

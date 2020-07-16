@@ -10,6 +10,10 @@ SRCS = 	main.c \
 		ft_texture.c \
 		ft_walls.c	\
 		ft_sprite.c \
+		ft_save.c \
+		parsing/ft_parsingscene.c \
+		parsing/utils.c \
+		parsing/gnl.c \
 
 OBJSRCS = $(SRCS:.c=.o) 
 

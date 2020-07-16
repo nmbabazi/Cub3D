@@ -31,7 +31,7 @@ void	ft_drawline(int x_start, int y_start, float distance, float angle,
 	y = 0;
 	while (i < distance)
 	{
-		param->img.data[(y_start + y) * WIN_WIDTH + (x_start + x)] = 0xffff00;
+		param->img.data[(y_start + y) * param->win_width + (x_start + x)] = 0xffff00;
 		x = cos(angle) * longeur;
 		y = sin(angle) * longeur;
 		longeur++;
@@ -56,7 +56,7 @@ void	ft_rectangle(int x, int y, int size, int col, t_param *param)
 		x = x_start;
 		while (count_x < size)
 		{
-			param->img.data[y * WIN_WIDTH + x] = col;
+			param->img.data[y * param->win_width + x] = col;
 			count_x++;
 			x++;
 		}
@@ -77,13 +77,13 @@ float	ft_normalizeangle(float angle)
 void	ft_raydirection(t_param *param, float angle, int id)
 {
 	if (angle > 0 && angle < M_PI)
-		param->ray[id].raydown = 1;
+		param->ray.raydown = 1;
 	else
-		param->ray[id].raydown = -1;
+		param->ray.raydown = -1;
 	if (angle < (M_PI * 0.5) || angle > (M_PI * 1.5))
-		param->ray[id].rayright = 1;
+		param->ray.rayright = 1;
 	else
-		param->ray[id].rayright = -1;
+		param->ray.rayright = -1;
 }
 
 void	ft_putchar_fd(char c, int fd)

@@ -12,29 +12,43 @@
 
 #include "include.h"
 
-void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param)
+void	ft_startingdirection(t_param *param, char c)
+{
+	if (c == 'N')
+		param->player.rotationangle = 1.5 * M_PI;;
+	if (c == 'S')
+		param->player.rotationangle = 0.5 * M_PI;
+	if (c == 'E')
+		param->player.rotationangle = 0;
+	if (c == 'W')
+		param->player.rotationangle = M_PI;
+}
+
+void	ft_initplayer(t_param *param)
 {
 	int i;
 	int l;
+	char c;
 
 	i = 0;
 	l = 0;
-	while (l < MAP_ROWS)
+	while (l < param->map_rows)
 	{
 		i = 0;
-		while (i < MAP_COLS)
+		while (i < param->map_cols)
 		{
-			if (map[l][i] == '3')
+			if (param->map[l][i] == 'N' || param->map[l][i] == 'S' || param->map[l][i] == 'E' || param->map[l][i] == 'W')
 			{
-				param->player.x = i * TILE_S + TILE_S / 2;
-				param->player.y = l * TILE_S + TILE_S / 2;
+				param->player.x = i * param->tile_s + param->tile_s / 2;
+				param->player.y = l * param->tile_s + param->tile_s / 2;
+				c = param->map[l][i];
 				break ;
 			}
 			i++;
 		}
 		l++;
 	}
-	param->player.rotationangle = M_PI / 2;
+	ft_startingdirection(param, c);
 	param->player.walkspeed = 2;
 	param->player.turnspeed = 2 * (M_PI / 180);
 	param->player.facingvert = 0;
@@ -98,7 +112,7 @@ void	ft_updateplayer(t_param *param)
     param->diry = olddirx * sin(dirangle) + param->diry * cos(dirangle);
 	param->planx = param->planx * cos(dirangle) - param->plany * sin(dirangle);
     param->plany = oldplanx * sin(dirangle) + param->plany * cos(dirangle);
-	if (ft_iswall(newplayerx, newplayery) == 0)
+	if (ft_iswall(newplayerx, newplayery, param) == 0)
 	{
 		param->player.x = newplayerx;
 		param->player.y = newplayery;

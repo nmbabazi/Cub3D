@@ -15,18 +15,18 @@
 
 void	ft_initrays(t_param *param, int id)
 {
-	param->ray[id].wallhitx = 0;
-	param->ray[id].wallhity = 0;
-	param->ray[id].colldistance = 0;
-	param->ray[id].raydown = 0;
-	param->ray[id].rayright = 0;
-	param->ray[id].washitvert = 0;
-	param->ray[id].wallheight = 0;
+	param->ray.wallhitx = 0;
+	param->ray.wallhity = 0;
+	param->ray.colldistance = 0;
+	param->ray.raydown = 0;
+	param->ray.rayright = 0;
+	param->ray.washitvert = 0;
+	param->ray.wallheight = 0;
 }
 
 void	ft_castsingleray(t_param *param, int id)
 {
-	ft_raydirection(param, param->ray[id].rayangle, id);
+	ft_raydirection(param, param->ray.rayangle, id);
 //////////////////////HORIZONTAL//////////////////////////
 	float horzhitdistance = 0;
 	float verthitdistance = 0;
@@ -38,27 +38,27 @@ void	ft_castsingleray(t_param *param, int id)
 	float xstep;
 	float ystep;
 
-	yintercept = floor(param->player.y / TILE_S) * TILE_S;
-	if (param->ray[id].raydown == 1)
-		yintercept += TILE_S;
-	xintercept = param->player.x + ((yintercept - param->player.y) / tan(param->ray[id].rayangle));
-	ystep = TILE_S;
-	if (param->ray[id].raydown == -1)
+	yintercept = floor(param->player.y / param->tile_s) * param->tile_s;
+	if (param->ray.raydown == 1)
+		yintercept += param->tile_s;
+	xintercept = param->player.x + ((yintercept - param->player.y) / tan(param->ray.rayangle));
+	ystep = param->tile_s;
+	if (param->ray.raydown == -1)
 		ystep *= -1;
-	xstep = TILE_S / tan(param->ray[id].rayangle);
-	if (param->ray[id].rayright == -1 && xstep > 0)
+	xstep = param->tile_s / tan(param->ray.rayangle);
+	if (param->ray.rayright == -1 && xstep > 0)
 		xstep *= -1;
-	if (param->ray[id].rayright == 1 && xstep < 0)
+	if (param->ray.rayright == 1 && xstep < 0)
 		xstep *= -1;
 	float	nexthorzy = yintercept;
 	float	nexthorzx = xintercept;
 	float	nexthorzycheck = yintercept;
-	while (nexthorzx >= 0 && nexthorzx <= WIN_WIDTH  && nexthorzy >= 0 && nexthorzy <= WIN_HEIGHT && nexthorzycheck >= 0 && nexthorzycheck <= WIN_HEIGHT)
+	while (nexthorzx >= 0 && nexthorzx <= param->map_cols * param->tile_s  && nexthorzy >= 0 && nexthorzy <= param->map_rows * param->tile_s && nexthorzycheck >= 0 && nexthorzycheck <= param->map_rows * param->tile_s)
 	{
 		nexthorzycheck = nexthorzy;
-		if (param->ray[id].raydown == -1)
+		if (param->ray.raydown == -1)
 			nexthorzycheck--;
-		if (ft_iswall(nexthorzx , nexthorzycheck) == 1)
+		if (ft_iswall(nexthorzx , nexthorzycheck, param) == 1)
 		{
 			horzhit = 1;
 			horzwallhitx = nexthorzx;
@@ -76,27 +76,27 @@ void	ft_castsingleray(t_param *param, int id)
 	int	verthit = 0;
 	float	vertwallhitx = 0;
 	float	vertwallhity = 0;
-	xintercept = floor(param->player.x / TILE_S) * TILE_S;
-	if (param->ray[id].rayright == 1)
-		xintercept += TILE_S;
-	yintercept = param->player.y + ((xintercept - param->player.x) * tan(param->ray[id].rayangle));
-	xstep = TILE_S;
-	if (param->ray[id].rayright == -1)
+	xintercept = floor(param->player.x / param->tile_s) * param->tile_s;
+	if (param->ray.rayright == 1)
+		xintercept += param->tile_s;
+	yintercept = param->player.y + ((xintercept - param->player.x) * tan(param->ray.rayangle));
+	xstep = param->tile_s;
+	if (param->ray.rayright == -1)
 		xstep *= -1;
-	ystep = TILE_S * tan(param->ray[id].rayangle);
-	if (param->ray[id].raydown == -1 && ystep > 0)
+	ystep = param->tile_s * tan(param->ray.rayangle);
+	if (param->ray.raydown == -1 && ystep > 0)
 		ystep *= -1;
-	if (param->ray[id].raydown == 1 && ystep < 0)
+	if (param->ray.raydown == 1 && ystep < 0)
 		ystep *= -1;
 	float	nextverty = yintercept;
 	float	nextvertx = xintercept;
 	float	nextvertxcheck = xintercept;
-	while (nextvertx >= 0 && nextvertx <= WIN_WIDTH  && nextverty >= 0 && nextverty <= WIN_HEIGHT && nextvertxcheck >= 0 && nextvertxcheck <= WIN_WIDTH)
+	while (nextvertx >= 0 && nextvertx <= param->map_cols * param->tile_s  && nextverty >= 0 && nextverty <= param->map_rows * param->tile_s && nextvertxcheck >= 0 && nextvertxcheck <= param->map_cols * param->tile_s)
 	{
 		nextvertxcheck = nextvertx;
-		if (param->ray[id].rayright == -1)
+		if (param->ray.rayright == -1)
 			nextvertxcheck--;
-		if (ft_iswall(nextvertxcheck, nextverty) == 1)
+		if (ft_iswall(nextvertxcheck, nextverty, param) == 1)
 		{
 			verthit = 1;
 			vertwallhitx = nextvertx;
@@ -121,21 +121,21 @@ void	ft_castsingleray(t_param *param, int id)
 ///////////////////RESULTAT////////////////////
 	if (horzhitdistance <= verthitdistance)
 	{
-		param->ray[id].wallhitx = horzwallhitx;
-		param->ray[id].wallhity = horzwallhity;
-		param->ray[id].colldistance = horzhitdistance;
-		param->ray[id].washitvert = 0;
+		param->ray.wallhitx = horzwallhitx;
+		param->ray.wallhity = horzwallhity;
+		param->ray.colldistance = horzhitdistance;
+		param->ray.washitvert = 0;
 	}
 	if (horzhitdistance > verthitdistance)
 	{
-		param->ray[id].wallhitx = vertwallhitx;
-		param->ray[id].wallhity = vertwallhity;
-		param->ray[id].colldistance = verthitdistance;
-		param->ray[id].washitvert = 1;
+		param->ray.wallhitx = vertwallhitx;
+		param->ray.wallhity = vertwallhity;
+		param->ray.colldistance = verthitdistance;
+		param->ray.washitvert = 1;
 	}
-//	printf("%f\n", param->ray[id].wallhitx);
+//	printf("%f\n", param->ray.wallhitx);
 /////////////////RENDER////////////////////////
-	ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP, param->ray[id].colldistance * MINIMAP, param->ray[id].rayangle, param);
+	ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP, param->ray.colldistance * MINIMAP, param->ray.rayangle, param);
 //////////////////////////////////////////////
 }
 
@@ -146,13 +146,15 @@ void	ft_castallrays(t_param *param)
 
 	id = 0;
 	angle = param->player.rotationangle - (FOV / 2);
-	while (id < NUM_RAYS)
+	while (id < param->win_width)
 	{
-		param->ray[id].rayangle = ft_normalizeangle(angle);
+		param->ray.rayangle = ft_normalizeangle(angle);
 		ft_initrays(param, id);
 		ft_castsingleray(param, id);
 		ft_render3d(param, id);
-		angle += FOV / NUM_RAYS;
+		angle += FOV / param->win_width;
 		id++;
 	}
+		
+	
 }

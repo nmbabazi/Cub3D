@@ -13,7 +13,7 @@
 #ifndef INCLUDE_H
 # define INCLUDE_H
 
-# include "./minilibx_opengl_20191021/mlx.h"
+# include "mlx.h"
 # include "parsing/parsing.h"
 # include <unistd.h>
 # include <stdio.h>
@@ -37,15 +37,9 @@
 # define KEY_DOWN 1
 # define VERT 1
 # define HORZ 0
-# define TILE_S 50
 # define MINIMAP 0.2
-# define MAP_ROWS 13
-# define MAP_COLS 20
-# define WIN_WIDTH (MAP_COLS * TILE_S)
-# define WIN_HEIGHT (MAP_ROWS * TILE_S)
 # define FOV 60 * (M_PI / 180)
 # define COLS_S 1
-# define NUM_RAYS (WIN_WIDTH / COLS_S)
 # define NUM_SPRITE 6
 
 typedef struct	s_player
@@ -86,7 +80,7 @@ typedef struct	s_ray
 	float	verthity;
 	float	verthitx;
 
-}				t_ray[NUM_RAYS];
+}				t_ray;
 
 typedef	struct	s_texture
 {
@@ -102,12 +96,10 @@ typedef	struct	s_texture
 
 typedef struct	s_sprite
 {
-	float	x[NUM_SPRITE];
-	float	y[NUM_SPRITE];
-	float	distance[NUM_SPRITE];
-	int		order[NUM_SPRITE];
+	float	*x;
+	float	*y;
+	float	*distance;
 	float	angle;
-	int		isvisible[NUM_SPRITE];
 	void	*ptr;
 	int		*data;
 	int		bpp;
@@ -116,15 +108,9 @@ typedef struct	s_sprite
 	int		width;
 	int		height;
 	char	*path;
-	char	**map;
-	float	buffer[NUM_RAYS];
-}				t_sprite;
-
-typedef	struct	s_list
-{
-	char		*str;
-	struct s_map	*next;
-}				t_list;		
+	int		nb_sprite;
+	float	*buffer;
+}				t_sprite;	
 
 typedef struct	s_param
 {
@@ -138,6 +124,11 @@ typedef struct	s_param
 	int			win_height;
 	int			f_color;
 	int			c_color;
+	char		**map;
+	int			map_cols;
+	int			map_rows;
+	int			tile_s;
+	int			num_rays;
 	t_image		img;
 	t_player	player;
 	t_ray		ray;
@@ -177,20 +168,18 @@ float	ft_normalizeangle(float angle);
 void	ft_castallrays(t_param *param);
 void	ft_raydirection(t_param *param, float angle, int id);
 void	ft_initrays(t_param *param, int id);
-int		ft_iswall(float x, float y);
 void	ft_renderplayer(t_param *param);
 void	ft_updateplayer(t_param *param);
-void	ft_rendermap(const char map[13][20], t_param *param);
-void	ft_initplayer(const char map[MAP_ROWS][MAP_COLS], t_param *param);
+void	ft_initplayer(t_param *param);
 void	ft_render3d(t_param *param, int id);
 void	ft_inittexture(t_param *param);
 void	ft_puttxt(t_param *param, int y, int x, int end, int i);
-void	ft_rendermap(const char map[13][20], t_param *param);
-int		ft_iswall(float x, float y);
+void	ft_rendermap(t_param *param);
+int		ft_iswall(float x, float y, t_param *param);
 void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
-void	ft_initsprite(const char map[MAP_ROWS][MAP_COLS], t_param *param);
+void	ft_initsprite(t_param *param);
 int		ft_issprite(float x, float y);
-void    ft_initsprite(const char map[MAP_ROWS][MAP_COLS], t_param *param);
+void    ft_initsprite(t_param *param);
 void	ft_spritetxt(t_param *param);
 float	ft_angle(t_param *param);
 void	ft_drawsprite(float y_start, float y_end, float sprite_size, t_param *param, int id);
@@ -200,4 +189,6 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void    ft_save(t_param *param, char *name);
 void	ft_writecolor(int fd, t_param *param);
+void    ft_parsing(char *fichier, t_param *param);
+
 #endif

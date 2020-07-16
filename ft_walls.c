@@ -17,10 +17,10 @@
 	int indexx;
 	int indexy;
 
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+	if (x < 0 || x > param->win_width || y < 0 || y > param->win_height)
 		return (1);
-	indexx = floor(x / TILE_S);
-	indexy = floor(y / TILE_S);
+	indexx = floor(x / param->tile_s);
+	indexy = floor(y / param->tile_s);
 	if (map[indexy][indexx] == '1')
 		return (1);
 	return (0);
@@ -34,21 +34,21 @@ void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id)
 //	y = walltop;
 	while (y < walltop)
 	{
-		param->img.data[y * WIN_WIDTH + id] = 0xC0C0C0;
+		param->img.data[y * param->win_width + id] = param->c_color;
 		y++;
 	}
-	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == -1)
+	if (param->ray.washitvert == 0 && param->ray.raydown == -1)
 		ft_puttxt(param, walltop, id, wallbottom, NO);
-	if (param->ray[id].washitvert == 0 && param->ray[id].raydown == 1)
+	if (param->ray.washitvert == 0 && param->ray.raydown == 1)
 		ft_puttxt(param, walltop, id, wallbottom, SO);
-	if (param->ray[id].washitvert == 1 && param->ray[id].rayright == -1)
+	if (param->ray.washitvert == 1 && param->ray.rayright == -1)
 		ft_puttxt(param, walltop, id, wallbottom, WE);
-	if (param->ray[id].washitvert == 1 && param->ray[id].rayright == 1)
+	if (param->ray.washitvert == 1 && param->ray.rayright == 1)
 		ft_puttxt(param, walltop, id, wallbottom, EA);
 	y = wallbottom;
-	while (y < WIN_HEIGHT)
+	while (y < param->win_height)
 	{
-		param->img.data[y * WIN_WIDTH + id] = 0x778899;
+		param->img.data[y * param->win_width + id] = param->f_color;
 		y++;
 	}
 }
@@ -60,15 +60,16 @@ void	ft_render3d(t_param *param, int id)
 	int		walltop;
 	int		wallbottom;
 
-	walldistance = param->ray[id].colldistance *
-	cos(param->ray[id].rayangle - param->player.rotationangle);
+	walldistance = param->ray.colldistance *
+	cos(param->ray.rayangle - param->player.rotationangle);
 	param->sprite.buffer[id] = walldistance;
-	distanceprojection = (WIN_WIDTH / 2) / tan(FOV / 2);
-	param->ray[id].wallheight = (int)((TILE_S / walldistance)
+//	printf("len = %f\n", param->sprite.buffer[id]);
+	distanceprojection = (param->win_width / 2) / tan(FOV / 2);
+	param->ray.wallheight = (int)((param->tile_s / walldistance)
 		* distanceprojection);
-	walltop = (WIN_HEIGHT / 2) - (param->ray[id].wallheight / 2);
+	walltop = (param->win_height / 2) - (param->ray.wallheight / 2);
 	walltop = walltop < 0 ? 0 : walltop;
-	wallbottom = (WIN_HEIGHT / 2) + (param->ray[id].wallheight / 2);
-	wallbottom = wallbottom > WIN_HEIGHT ? WIN_HEIGHT : wallbottom;
+	wallbottom = (param->win_height / 2) + (param->ray.wallheight / 2);
+	wallbottom = wallbottom > param->win_height ? param->win_height : wallbottom;
 	ft_drawwall(walltop, wallbottom, param, id);
 }
