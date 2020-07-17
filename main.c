@@ -12,178 +12,68 @@
 
 #include "include.h"
 
-void	ft_rendermap(t_param *param)
+static void	ft_key(t_param *param, int key, int n)
 {
-	int i;
-	int l;
-	int col;
-
-	i = 0;
-	l = 0;
-	col = 0x000000;
-	while (l < param->map_rows)
-	{
-		i = 0;
-		while (i < param->map_cols)
-		{
-			if (param->map[l][i] == '1')
-				col = 0xFFFFFF;
-			else if (param->map[l][i] != '1')
-				col = 0x000000;
-			ft_rectangle(i * param->tile_s  * MINIMAP, l * param->tile_s * MINIMAP,
-					param->tile_s * MINIMAP, col, param);
-			i++;
-		}
-		l++;
-	}
-}
-
-int		key_press(int key, void *data)
-{
-	t_param *param;
-
-	param = (t_param *)data;
-	if (key == CAM_RIGHT)
-	{
-		param->player.turndirection = +1;
-		param->player.lodev = -1;
-	}
-	if (key == CAM_LEFT)
-	{
-		param->player.turndirection = -1;
-		param->player.lodev = +1;
-	}
-		if (key == KEY_LEFT)
-	{
-		param->player.walkdirection = -1;
-		param->player.velocity = -1;
-	}
-	if (key == KEY_RIGHT)
-	{
-		param->player.walkdirection = 1;
-		param->player.velocity = +1;
-	}
-	if (key == KEY_UP)
-	{
-		param->player.walkdirection = 1;
-		param->player.velocity = 0;
-	}
-	if (key == KEY_DOWN)
-	{
-		param->player.walkdirection = -1;
-		param->player.velocity = 0;
-	}
-	if (key == 53)
-		exit(0);
-	return (1);
-}
-
-int		key_release(int key, void *data)
-{
-	t_param *param;
-
-	param = (t_param *)data;
-	if (key == CAM_RIGHT)
-	{
-		param->player.turndirection = 0;
-		param->player.lodev = 0;
-	}
-	if (key == CAM_LEFT)
-	{
-		param->player.turndirection = 0;
-		param->player.lodev = 0;
-	}
 	if (key == KEY_LEFT)
 	{
-		param->player.walkdirection = 0;
-		param->player.velocity = 0;
+		param->player.walkdirection = -n;
+		param->player.translation = n;
 	}
 	if (key == KEY_RIGHT)
 	{
-		param->player.walkdirection = 0;
-		param->player.velocity = 0;
+		param->player.walkdirection = n;
+		param->player.translation = n;
 	}
 	if (key == KEY_UP)
 	{
-		param->player.walkdirection = 0;
-		param->player.velocity = 0;
+		param->player.walkdirection = n;
+		param->player.translation = 0 * n;
 	}
 	if (key == KEY_DOWN)
 	{
-		param->player.walkdirection = 0;
-		param->player.velocity = 0;
+		param->player.walkdirection = -n;
+		param->player.translation = 0 * n;
 	}
-	return (1);
 }
 
-int		exit_properly(void *data)
+int			key_press(int key, void *data)
 {
 	t_param *param;
 
 	param = (t_param *)data;
-	exit(0);
+	if (key == CAM_RIGHT)
+		param->player.turndirection = +1;
+	if (key == CAM_LEFT)
+		param->player.turndirection = -1;
+	ft_key(param, key, 1);
+	if (key == 53)
+		exit_properly(param);
 	return (1);
 }
 
-int		ft_iswall(float x, float y, t_param *param)
+int			key_release(int key, void *data)
 {
-	int indexx;
-	int indexy;
+	t_param *param;
 
-	if (x < 0 || x > param->map_cols * param->tile_s || y < 0 || y > param->map_rows * param->tile_s)
-		return (1);
-	indexx = floor(x / param->tile_s);
-	indexy = floor(y / param->tile_s);
-	if (param->map[indexy][indexx] == '1')
-		return (1);
-	return (0);
+	param = (t_param *)data;
+	if (key == CAM_RIGHT)
+		param->player.turndirection = 0;
+	if (key == CAM_LEFT)
+		param->player.turndirection = 0;
+	ft_key(param, key, 0);
+	return (1);
 }
 
-void	ft_initvecteur(t_param *param)
+int			game_loop(t_param *param)
 {
-	float angledown = 0.5 * M_PI;
-	float angleeast = 0;
-	float anglewest = M_PI;
-	float angleup = 1.5 * M_PI;
-	if (param->player.rotationangle == angleeast)
-	{
-		param->dirx = 1;
-		param->diry = 0;
-		param->planx = 0;
-		param->plany = -0.6;
-	}
-	if (param->player.rotationangle == angledown)
-	{
-		param->dirx = 0;
-		param->diry = 1;
-		param->planx = 0.6;
-		param->plany = 0;
-	}
-	if (param->player.rotationangle == anglewest)
-	{
-		param->dirx = -1;
-		param->diry = 0;
-		param->planx = 0;
-		param->plany = 0.6;
-	}
-	if (param->player.rotationangle == angleup)
-	{
-		param->dirx = 0;
-		param->diry = -1;
-		param->planx = -0.6;
-		param->plany = 0;
-	}
-}
-
-int		game_loop(t_param *param)
-{
-	param->img.img_ptr = mlx_new_image(param->mlx_ptr, param->win_width, param->win_height);
+	param->img.img_ptr = mlx_new_image(param->mlx_ptr,
+		param->win_width, param->win_height);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
-			&param->img.bpp, &param->img.size_l, &param->img.endian);
+		&param->img.bpp, &param->img.size_l, &param->img.endian);
 	ft_updateplayer(param);
 	ft_castallrays(param);
-	ft_rendermap(param);
 	ft_putsprite(param);
+	ft_rendermap(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	if (param->argument == 3)
@@ -197,18 +87,24 @@ int		game_loop(t_param *param)
 	return (1);
 }
 
-int	main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_param		param;
+//	int			width;
+//	int			height;
 
 	ft_parsing(av[1], &param);
 	param.argument = ac;
 	param.mlx_ptr = mlx_init();
-	param.win_ptr = mlx_new_window(param.mlx_ptr, param.win_width, param.win_height, "Cub3D");
+	param.win_ptr = mlx_new_window(param.mlx_ptr,
+		param.win_width, param.win_height, "Cub3D");
 	ft_initplayer(&param);
+//	mlx_get_screen_size(&param.mlx_ptr, &width, &height);
+//	ft_initwin_size(&param, width, height);
 	ft_inittexture(&param);
 	ft_initsprite(&param);
-	ft_initvecteur(&param);
+	ft_initdir(&param);
+	ft_initplan(&param);
 	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);

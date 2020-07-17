@@ -13,7 +13,7 @@
 #ifndef INCLUDE_H
 # define INCLUDE_H
 
-# include "mlx.h"
+# include "minilibx_mms_/mlx.h"
 # include "parsing/parsing.h"
 # include <unistd.h>
 # include <stdio.h>
@@ -37,23 +37,25 @@
 # define KEY_DOWN 1
 # define VERT 1
 # define HORZ 0
-# define MINIMAP 0.2
+# define MINIMAP 0.3
 # define FOV 60 * (M_PI / 180)
-# define COLS_S 1
-# define NUM_SPRITE 6
 
 typedef struct	s_player
 {
-	float	x;
-	float	y;
-	int		turndirection;
-	int		walkdirection;
-	float	rotationangle;
-	float	walkspeed;
-	float	turnspeed;
-	int		lodev;
-	int 	velocity;
-	int		facingvert;	
+	float		x;
+	float		y;
+	int			turndirection;
+	int			walkdirection;
+	float		rotationangle;
+	float		walkspeed;
+	float		turnspeed;
+	int			translation;
+	int			facingvert;
+	char		c;
+	float		diry;
+	float		dirx;
+	float		plany;
+	float		planx;
 }				t_player;
 
 typedef struct	s_img
@@ -75,11 +77,15 @@ typedef struct	s_ray
 	int		rayright;
 	int		washitvert;
 	int		wallheight;
-	float	horzhity;
-	float	horzhitx;
-	float	verthity;
-	float	verthitx;
-
+	float	vertwallhitx;
+	float	vertwallhity;
+	float	horzwallhitx;
+	float	horzwallhity;
+	float	yintercept;
+	float	xintercept;
+	float	xstep;
+	float	ystep;
+	float	nextcheck;
 }				t_ray;
 
 typedef	struct	s_texture
@@ -116,10 +122,6 @@ typedef struct	s_param
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
-	float		diry;
-	float		dirx;
-	float		plany;
-	float		planx;
 	int			win_width;
 	int			win_height;
 	int			f_color;
@@ -129,12 +131,12 @@ typedef struct	s_param
 	int			map_rows;
 	int			tile_s;
 	int			num_rays;
+	int			argument;
 	t_image		img;
 	t_player	player;
 	t_ray		ray;
 	t_texture	texture;
 	t_sprite	sprite;
-	int			argument;
 }				t_param;
 
 typedef	struct	s_file_header
@@ -161,25 +163,24 @@ typedef struct		s_info_header
 }					t_info_header;
 
 float	ft_distance(float x, float y, float xend, float yend);
-void	ft_drawline(int x_start, int y_start, float distance, float angle,
+void	ft_drawline(int x_start, int y_start, float angle,
 t_param *param);
-void	ft_rectangle(int x, int y, int size, int col, t_param *param);
+void	ft_drawmap(int x, int y, int col, t_param *param);
 float	ft_normalizeangle(float angle);
 void	ft_castallrays(t_param *param);
 void	ft_raydirection(t_param *param, float angle, int id);
 void	ft_initrays(t_param *param, int id);
 void	ft_renderplayer(t_param *param);
 void	ft_updateplayer(t_param *param);
+void	ft_drawplayer(int x, int y, int col, t_param *param);
 void	ft_initplayer(t_param *param);
 void	ft_render3d(t_param *param, int id);
 void	ft_inittexture(t_param *param);
-void	ft_puttxt(t_param *param, int y, int x, int end, int i);
+void	ft_puttxt(t_param *param, int y, int x, int i);
 void	ft_rendermap(t_param *param);
 int		ft_iswall(float x, float y, t_param *param);
 void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
 void	ft_initsprite(t_param *param);
-int		ft_issprite(float x, float y);
-void    ft_initsprite(t_param *param);
 void	ft_spritetxt(t_param *param);
 float	ft_angle(t_param *param);
 void	ft_drawsprite(float y_start, float y_end, float sprite_size, t_param *param, int id);
@@ -190,5 +191,10 @@ void	ft_putstr_fd(char *s, int fd);
 void    ft_save(t_param *param, char *name);
 void	ft_writecolor(int fd, t_param *param);
 void    ft_parsing(char *fichier, t_param *param);
+void	ft_initwin_size(t_param *param, int width, int height);
+void	ft_initvecteur(t_param *param);
+int		exit_properly(void *data);
+void	ft_initplan(t_param *param);
+void	ft_initdir(t_param *param);
 
 #endif

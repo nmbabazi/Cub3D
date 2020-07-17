@@ -17,8 +17,7 @@ float	ft_distance(float x, float y, float xend, float yend)
 	return (sqrt((xend - x) * (xend - x) + (yend - y) * (yend - y)));
 }
 
-void	ft_drawline(int x_start, int y_start, float distance, float angle,
-		t_param *param)
+void	ft_drawline(int x_start, int y_start, float angle, t_param *param)
 {
 	float	i;
 	int		x;
@@ -29,9 +28,10 @@ void	ft_drawline(int x_start, int y_start, float distance, float angle,
 	i = 0;
 	x = 0;
 	y = 0;
-	while (i < distance)
+	while (i < param->ray.colldistance * MINIMAP)
 	{
-		param->img.data[(y_start + y) * param->win_width + (x_start + x)] = 0xffff00;
+		param->img.data[(y_start + y) * param->win_width
+			+ (x_start + x)] = 0xffff00;
 		x = cos(angle) * longeur;
 		y = sin(angle) * longeur;
 		longeur++;
@@ -39,7 +39,7 @@ void	ft_drawline(int x_start, int y_start, float distance, float angle,
 	}
 }
 
-void	ft_rectangle(int x, int y, int size, int col, t_param *param)
+void	ft_drawplayer(int x, int y, int col, t_param *param)
 {
 	int count_y;
 	int count_x;
@@ -50,11 +50,11 @@ void	ft_rectangle(int x, int y, int size, int col, t_param *param)
 	count_x = 0;
 	x_start = x;
 	col_start = col;
-	while (count_y < size)
+	while (count_y < 15 * MINIMAP)
 	{
 		count_x = 0;
 		x = x_start;
-		while (count_x < size)
+		while (count_x < 15 * MINIMAP)
 		{
 			param->img.data[y * param->win_width + x] = col;
 			count_x++;
@@ -105,4 +105,22 @@ void	ft_putstr_fd(char *s, int fd)
 			i++;
 		}
 	}
+}
+
+void	ft_initwin_size(t_param *param, int width, int height)
+{
+	if (param->win_height > height)
+		param->win_height = height;
+	if (param->win_width > width)
+		param->win_width = width;
+	return ;
+}
+
+int		exit_properly(void *data)
+{
+	t_param *param;
+
+	param = (t_param *)data;
+	exit(0);
+	return (1);
 }

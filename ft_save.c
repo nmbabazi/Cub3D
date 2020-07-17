@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_save.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/17 15:38:57 by nmbabazi          #+#    #+#             */
+/*   Updated: 2020/07/17 15:39:03 by nmbabazi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "include.h"
 
-void	ft_fillheader(t_file_header *file_header, t_info_header *info_header, t_param *param)
+void	ft_fillheader(t_file_header *file_header,
+			t_info_header *info_header, t_param *param)
 {
 	file_header->type[0] = 0x42;
 	file_header->type[1] = 0x4D;
@@ -20,7 +33,8 @@ void	ft_fillheader(t_file_header *file_header, t_info_header *info_header, t_par
 	info_header->important_color = 0;
 }
 
-void	ft_writebmp(t_file_header *file_header, t_info_header *info_header, int fd)
+void	ft_writebmp(t_file_header *file_header,
+			t_info_header *info_header, int fd)
 {
 	write(fd, &file_header->type, 2);
 	write(fd, &file_header->size, 4);
@@ -39,7 +53,7 @@ void	ft_writebmp(t_file_header *file_header, t_info_header *info_header, int fd)
 	write(fd, &info_header->important_color, 4);
 }
 
-void		ft_writecolor(int fd, t_param *param)
+void	ft_writecolor(int fd, t_param *param)
 {
 	char	*pixel_array;
 	int		image_size;
@@ -56,7 +70,7 @@ void		ft_writecolor(int fd, t_param *param)
 	j = 0;
 	while (i < image_size)
 	{
-		pixel_array[j++] = 	param->img.data[i] & 255;
+		pixel_array[j++] = param->img.data[i] & 255;
 		pixel_array[j++] = (param->img.data[i] & 255 << 8) >> 8;
 		pixel_array[j++] = (param->img.data[i] & 255 << 16) >> 16;
 		pixel_array[j++] = 0;
@@ -66,13 +80,14 @@ void		ft_writecolor(int fd, t_param *param)
 	free(pixel_array);
 }
 
-void    ft_save(t_param *param, char *name)
+void	ft_save(t_param *param, char *name)
 {
-    int fd;
+	int				fd;
 	t_file_header	file_header;
 	t_info_header	info_header;
 
-	if (!((fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR)) > 0))
+	if (!((fd = open(name, O_WRONLY | O_CREAT
+			| O_TRUNC, S_IRUSR | S_IWUSR)) > 0))
 	{
 		ft_putstr_fd("ERREUR OUVERTURE DE BMP", 1);
 		return ;

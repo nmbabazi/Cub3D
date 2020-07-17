@@ -1,7 +1,7 @@
 NO ./txt_nord.xpm
 SO ./txt_sud.xpm
 WE ./txt_west.xpm
-R 730 400
+R 1000 1000
 EA ./txt_est.xpm
 S ./plante.xpm
 

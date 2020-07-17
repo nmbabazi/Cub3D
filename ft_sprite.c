@@ -16,7 +16,7 @@ int	ft_countsprite(t_param *param)
 {
 	int i;
 	int l;
-	int nb_sprite; 
+	int nb_sprite;
 
 	i = 0;
 	l = 0;
@@ -35,41 +35,23 @@ int	ft_countsprite(t_param *param)
 	return (nb_sprite);
 }
 
-void    ft_initsprite(t_param *param)
+int		ft_mallocsprite(t_param *param)
 {
-    int i;
-	int l;
-	int id;
-
-	i = 0;
-	l = 0;
-	id = 0;
 	param->sprite.nb_sprite = ft_countsprite(param);
 	if (!(param->sprite.x = malloc(sizeof(float) * param->sprite.nb_sprite)))
-		return ;
+		return (0);
 	if (!(param->sprite.y = malloc(sizeof(float) * param->sprite.nb_sprite)))
-		return ;
-	if (!(param->sprite.distance = (float *)malloc(sizeof(float) * param->sprite.nb_sprite)))
-		return ;
+		return (0);
+	if (!(param->sprite.distance = (float *)malloc(sizeof(float)
+		* param->sprite.nb_sprite)))
+		return (0);
 	if (!(param->sprite.buffer = malloc(sizeof(float) * param->win_width)))
-		return ;
-	while (l < param->map_rows && id < param->sprite.nb_sprite)
-	{
-		i = 0;
-		while (i < param->map_cols)
-		{
-			if (param->map[l][i] == '2')
-			{
-				param->sprite.x[id] = i * param->tile_s + param->tile_s / 2;
-				param->sprite.y[id] = l * param->tile_s + param->tile_s / 2;
-				param->sprite.distance[id] = 0;
-	//			printf("X = %f             Y = %f\n", param->sprite.x[id], param->sprite.y[id]);
-				id++;
-			}
-			i++;
-		}
-		l++;
-	}
+		return (0);
+	return (1);
+}
+
+void	ft_puttozero(t_param *param)
+{
 	param->sprite.angle = 0;
 	param->sprite.ptr = 0;
 	param->sprite.data = 0;
@@ -78,54 +60,81 @@ void    ft_initsprite(t_param *param)
 	param->sprite.size_l = 0;
 	param->sprite.width = 0;
 	param->sprite.height = 0;
+}
+
+void	ft_initsprite(t_param *param)
+{
+	int	i;
+	int l;
+	int id;
+
+	i = -1;
+	l = -1;
+	id = 0;
+	if (ft_mallocsprite(param) == 0)
+		return ;
+	while (l++ < param->map_rows && id < param->sprite.nb_sprite)
+	{
+		i = 0;
+		while (i++ < param->map_cols)
+		{
+			if (param->map[l][i] == '2')
+			{
+				param->sprite.x[id] = i * param->tile_s + param->tile_s / 2;
+				param->sprite.y[id] = l * param->tile_s + param->tile_s / 2;
+				param->sprite.distance[id] = 0;
+				id++;
+			}
+		}
+	}
+	ft_puttozero(param);
 	ft_spritetxt(param);
 }
 
 void	ft_spritetxt(t_param *param)
 {
-	param->sprite.ptr = mlx_xpm_file_to_image(param->mlx_ptr, param->sprite.path,
+	param->sprite.ptr = mlx_xpm_file_to_image(param->mlx_ptr,
+		param->sprite.path,
 			&param->sprite.width, &param->sprite.height);
 	param->sprite.data = (int *)mlx_get_data_addr(param->sprite.ptr,
 			&param->sprite.bpp, &param->sprite.size_l, &param->sprite.endian);
-
 }
 
+float	ft_calculangle(t_param *param, float x, float y)
+{
+	float	vectx;
+	float	vecty;
+	float	playertospriteangle;
+	float	spriteangle;
+	float	playerangle;
+
+	vectx = x - param->player.x;
+	vecty = y - param->player.y;
+	playertospriteangle = atan2(vecty, vectx);
+	playerangle = ft_normalizeangle(param->player.rotationangle);
+	spriteangle = playerangle - playertospriteangle;
+	if (spriteangle < -3.14159)
+		spriteangle += 2.0 * 3.14159;
+	if (spriteangle > 3.14159)
+		spriteangle -= 2.0 * 3.14159;
+	spriteangle = fabs(spriteangle);
+	return (spriteangle);
+}
 
 int	ft_spritevisible(t_param *param, int id, float sprite_size)
 {
-	float	vectX;
-	float	vectY;
-	float	vectX_end;
-	float	vectY_end;
-	float	playertospriteangle;
-	float	playertospriteangle_end;
-	float 	spriteangle;
-	float 	spriteangle_end;
-	float	playerangle;
+	float	spriteangle;
+	float	spriteangle_end;
+	float	wallspriteangle;
+	float	fovsprite;
 
-	vectX = param->sprite.x[id] - param->player.x;
-	vectY = param->sprite.y[id] - param->player.y;
-	vectX_end = (param->sprite.x[id] + sprite_size) - param->player.x;
-	vectY_end = (param->sprite.y[id] + sprite_size) - param->player.y;
-	playertospriteangle  = atan2(vectY, vectX);
-	playertospriteangle_end  = atan2(vectY_end, vectX_end);
-	playerangle = ft_normalizeangle(param->player.rotationangle);
-	spriteangle = playerangle - playertospriteangle;
-	spriteangle_end = playerangle - playertospriteangle_end;
-			
-	if (spriteangle < -3.14159)
-			spriteangle += 2.0 * 3.14159;
-	if (spriteangle > 3.14159)
-			spriteangle -= 2.0 * 3.14159;
-	if (spriteangle_end < -3.14159)
-			spriteangle_end += 2.0 * 3.14159;
-	if (spriteangle_end > 3.14159)
-			spriteangle_end -= 2.0 * 3.14159;
-	spriteangle = fabs(spriteangle);
-	spriteangle_end = fabs(spriteangle_end);
-	float wallspriteangle = fabs(spriteangle_end - spriteangle);
-	float fovSprite = FOV / 2 + wallspriteangle;
-	if(spriteangle < fovSprite)
+	spriteangle = fabs(ft_calculangle(param, param->sprite.x[id],
+		param->sprite.y[id]));
+	spriteangle_end = fabs(ft_calculangle(param, (param->sprite.x[id]
+		+ sprite_size), (param->sprite.y[id] + sprite_size)));
+	wallspriteangle = fabs(spriteangle_end - spriteangle);
+	fovsprite = FOV / 2 + wallspriteangle;
+	if (spriteangle < fovsprite)
 		return (1);
 	else
 		return (0);
@@ -134,30 +143,31 @@ int	ft_spritevisible(t_param *param, int id, float sprite_size)
 void	ft_spritedistance(t_param *param)
 {
 	int id;
-	
+
 	id = 0;
-    while(id < param->sprite.nb_sprite)
-    {
-		param->sprite.distance[id] = ft_distance(param->player.x, param->player.y, param->sprite.x[id], param->sprite.y[id]);
+	while (id < param->sprite.nb_sprite)
+	{
+		param->sprite.distance[id] = ft_distance(param->player.x,
+			param->player.y, param->sprite.x[id], param->sprite.y[id]);
 		id++;
-    }
+	}
 }
 
-void ft_sortsprite(t_param *param)
+void	ft_sortsprite(t_param *param)
 {
-	int i;
-	float temp_dist;
-	float temp_y;
-	float temp_x;
-	int j;
+	float	temp_dist;
+	float	temp_y;
+	float	temp_x;
+	int		j;
+	int		i;
 
-	i = 0;
-	while(i < param->sprite.nb_sprite)
+	i = -1;
+	while (i++ < param->sprite.nb_sprite)
 	{
 		j = i + 1;
-		while(j < param->sprite.nb_sprite)
+		while (j++ < param->sprite.nb_sprite)
 		{
-			if(param->sprite.distance[j] > param->sprite.distance[i])
+			if (param->sprite.distance[j] > param->sprite.distance[i])
 			{
 				temp_dist = param->sprite.distance[j];
 				temp_x = param->sprite.x[j];
@@ -169,9 +179,7 @@ void ft_sortsprite(t_param *param)
 				param->sprite.x[i] = temp_x;
 				param->sprite.y[i] = temp_y;
 			}
-			j++;
 		}
-		i++;
 	}
 }
 
@@ -180,63 +188,87 @@ void	ft_putsprite(t_param *param)
 	int		textureoffsetx;
 	int		distancefromtop;
 	int		textureoffsety;
-	float distanceprojection;
-	int stripe;
-	float sprite_size;
-	int y;
-	int id = 0;
+	float	distanceprojection;
+	int		x;
+	float	sprite_size;
+	int		y;
+	int		id;
+	float	spritex;
+	float	spritey;
+	float	invdet;
+	float	transformx;
+	float	transformy;
+	int		spritescreenx;
+	int		spriteheight;
+	int		drawstarty;
+	int		drawendy;
+	int		spritewidth;
+	int		drawstartx;
+	int		drawendx;
+	int		color;
+
+	id = 0;
 	ft_spritedistance(param);
 	ft_sortsprite(param);
-
 	while (id < param->sprite.nb_sprite)
 	{
 		distanceprojection = (param->win_width / 2) / tan(FOV / 2);
-		sprite_size = (param->tile_s * 0.5 / param->sprite.distance[id]) * distanceprojection;
-	//	printf("SIZE = %f\n", sprite_size);
+		sprite_size = (param->tile_s * 0.5 /
+			param->sprite.distance[id]) * distanceprojection;
 		if (ft_spritevisible(param, id, sprite_size) == 1)
 		{
-			float spriteX = param->sprite.x[id] - param->player.x;
-			float spriteY = param->sprite.y[id] - param->player.y;
-			float invDet = 1.0 / (param->planx * param->diry - param->dirx * param->plany);
-			float transformX = invDet * (param->diry * spriteX - param->dirx * spriteY);
-			float transformY = invDet * (-param->plany * spriteX + param->planx * spriteY);
-			int spriteScreenX = (int)((param->win_width / 2) * (1 + -transformX / transformY));
+			spritex = param->sprite.x[id] - param->player.x;
+			spritey = param->sprite.y[id] - param->player.y;
+			invdet = 1.0 / (param->player.planx * param->player.diry
+				- param->player.dirx * param->player.plany);
+			transformx = invdet * (param->player.diry * spritex
+				- param->player.dirx * spritey);
+			transformy = invdet * (-param->player.plany * spritex
+				+ param->player.planx * spritey);
+			spritescreenx = (int)((param->win_width / 2) *
+				(1 + -transformx / transformy));
 
-			int spriteHeight = sprite_size;
-			int drawStartY = -spriteHeight / 2 + param->win_height / 2;
-			if(drawStartY < 0) drawStartY = 0;
-			int drawEndY = spriteHeight / 2 + param->win_height / 2;
-			if(drawEndY >= param->win_height) drawEndY = param->win_height - 1;
+			spriteheight = sprite_size;
+			drawstarty = -spriteheight / 2 + param->win_height / 2;
+			if (drawstarty < 0)
+				drawstarty = 0;
+			drawendy = spriteheight / 2 + param->win_height / 2;
+			if (drawendy >= param->win_height)
+				drawendy = param->win_height - 1;
 
-			int spriteWidth = sprite_size;
-			int drawStartX = -spriteWidth / 2 + spriteScreenX;
-			if(drawStartX < 0) drawStartX = 0;
-			int drawEndX = spriteWidth / 2 + spriteScreenX;
-			if(drawEndX >= param->win_width) drawEndX = param->win_width - 1;
+			spritewidth = sprite_size;
+			drawstartx = -spritewidth / 2 + spritescreenx;
+			if (drawstartx < 0)
+				drawstartx = 0;
+			drawendx = spritewidth / 2 + spritescreenx;
+			if (drawendx >= param->win_width)
+				drawendx = param->win_width - 1;
 
-			stripe = drawStartX;
-			while (stripe < drawEndX)
+			x = drawstartx;
+			while (x < drawendx)
 			{
-			//	printf("transformY = %f      stripe = %d         len = %f\n", transformY,  stripe, param->sprite.buffer[stripe]);
-				if(transformY > 0 && stripe > 0 && stripe < param->win_width && transformY < param->sprite.buffer[stripe])
+				if (transformy > 0 && x > 0 && x < param->win_width
+					&& transformy < param->sprite.buffer[x])
 				{
-				//	printf("START = %d   END = %d\n", drawStartY, drawEndY);
-					y = drawStartY;
-					while (y < drawEndY)
+					y = drawstarty;
+					while (y < drawendy)
 					{
-						textureoffsetx = (int)(256 * (stripe - (-sprite_size / 2 + spriteScreenX)) * param->sprite.width / sprite_size) / 256;
-						distancefromtop = (y) * 256 - param->win_height * 128 + sprite_size * 128;
-						textureoffsety = ((distancefromtop * param->sprite.height) / sprite_size) / 256;
-						int color = param->sprite.data[(textureoffsety * param->sprite.width) + textureoffsetx];
-					//	int color = 0xFFFFFF;
-						param->img.data[y * param->win_width + stripe] = color;
+						textureoffsetx = (int)(256 * (x - (-sprite_size /
+							2 + spritescreenx)) * param->sprite.width
+							/ sprite_size) / 256;
+						distancefromtop = (y) * 256 - param->win_height *
+							128 + sprite_size * 128;
+						textureoffsety = ((distancefromtop *
+							param->sprite.height) / sprite_size) / 256;
+						color = param->sprite.data[(textureoffsety *
+							param->sprite.width) + textureoffsetx];
+						param->img.data[y * param->win_width + x] = color;
 						y++;
 					}
 				}
-				stripe++;
+				x++;
 			}
 		}
 		id++;
 	}
-//	free(param->sprite.buffer);
 }
