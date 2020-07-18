@@ -12,7 +12,7 @@
 
 #include "include.h"
 
-int	ft_countsprite(t_param *param)
+int		ft_countsprite(t_param *param)
 {
 	int i;
 	int l;
@@ -121,7 +121,7 @@ float	ft_calculangle(t_param *param, float x, float y)
 	return (spriteangle);
 }
 
-int	ft_spritevisible(t_param *param, int id, float sprite_size)
+int		ft_spritevisible(t_param *param, int id, float sprite_size)
 {
 	float	spriteangle;
 	float	spriteangle_end;
@@ -153,11 +153,25 @@ void	ft_spritedistance(t_param *param)
 	}
 }
 
-void	ft_sortsprite(t_param *param)
+void	ft_switch(t_param *param, int i, int j)
 {
 	float	temp_dist;
 	float	temp_y;
 	float	temp_x;
+
+	temp_dist = param->sprite.distance[j];
+	temp_x = param->sprite.x[j];
+	temp_y = param->sprite.y[j];
+	param->sprite.distance[j] = param->sprite.distance[i];
+	param->sprite.x[j] = param->sprite.x[i];
+	param->sprite.y[j] = param->sprite.y[i];
+	param->sprite.distance[i] = temp_dist;
+	param->sprite.x[i] = temp_x;
+	param->sprite.y[i] = temp_y;
+}
+
+void	ft_sortsprite(t_param *param)
+{
 	int		j;
 	int		i;
 
@@ -165,47 +179,115 @@ void	ft_sortsprite(t_param *param)
 	while (i++ < param->sprite.nb_sprite)
 	{
 		j = i + 1;
-		while (j++ < param->sprite.nb_sprite)
+		while (j < param->sprite.nb_sprite)
 		{
 			if (param->sprite.distance[j] > param->sprite.distance[i])
-			{
-				temp_dist = param->sprite.distance[j];
-				temp_x = param->sprite.x[j];
-				temp_y = param->sprite.y[j];
-				param->sprite.distance[j] = param->sprite.distance[i];
-				param->sprite.x[j] = param->sprite.x[i];
-				param->sprite.y[j] = param->sprite.y[i];
-				param->sprite.distance[i] = temp_dist;
-				param->sprite.x[i] = temp_x;
-				param->sprite.y[i] = temp_y;
-			}
+				ft_switch(param, i, j);
+			j++;
 		}
 	}
 }
 
-void	ft_putsprite(t_param *param)
+float	ft_gettransformy(t_param *param, int id, float sprite_size)
 {
-	int		textureoffsetx;
-	int		distancefromtop;
-	int		textureoffsety;
-	float	distanceprojection;
-	int		x;
-	float	sprite_size;
-	int		y;
-	int		id;
 	float	spritex;
 	float	spritey;
 	float	invdet;
 	float	transformx;
 	float	transformy;
-	int		spritescreenx;
+
+	spritex = param->sprite.x[id] - param->player.x;
+	spritey = param->sprite.y[id] - param->player.y;
+	invdet = 1.0 / (param->player.planx * param->player.diry
+		- param->player.dirx * param->player.plany);
+	transformx = invdet * (param->player.diry * spritex
+		- param->player.dirx * spritey);
+	transformy = invdet * (-param->player.plany * spritex
+		+ param->player.planx * spritey);
+	param->sprite.spritescreenx = (int)((param->win_width / 2) *
+		(1 + -transformx / transformy));
+	return (transformy);
+}
+
+void	ft_getstart(t_param *param, float sprite_size)
+{
 	int		spriteheight;
-	int		drawstarty;
-	int		drawendy;
 	int		spritewidth;
-	int		drawstartx;
-	int		drawendx;
+
+	spritewidth = sprite_size;
+	param->sprite.drawstartx = -spritewidth / 2 + param->sprite.spritescreenx;
+	if (param->sprite.drawstartx < 0)
+		param->sprite.drawstartx = 0;
+	param->sprite.drawendx = spritewidth / 2 + param->sprite.spritescreenx;
+	if (param->sprite.drawendx >= param->win_width)
+		param->sprite.drawendx = param->win_width - 1;
+	spriteheight = sprite_size;
+	param->sprite.drawstarty = -spriteheight / 2 + param->win_height / 2;
+	if (param->sprite.drawstarty < 0)
+		param->sprite.drawstarty = 0;
+	param->sprite.drawendy = spriteheight / 2 + param->win_height / 2;
+	if (param->sprite.drawendy >= param->win_height)
+		param->sprite.drawendy = param->win_height - 1;
+}
+
+void	ft_puttexture(t_param *param, int x, int y, float sprite_size)
+{
+	int		textureoffsetx;
+	int		distancefromtop;
+	int		textureoffsety;
 	int		color;
+
+	textureoffsetx = (int)(256 * (x - (-sprite_size /
+		2 + param->sprite.spritescreenx)) * param->sprite.width
+		/ sprite_size) / 256;
+	distancefromtop = (y) * 256 - param->win_height *
+		128 + sprite_size * 128;
+	textureoffsety = ((distancefromtop *
+		param->sprite.height) / sprite_size) / 256;
+	color = param->sprite.data[(textureoffsety *
+		param->sprite.width) + textureoffsetx];
+	if (color == 0xFFFFFF)
+		color = 0xFFFF00;
+	param->img.data[y * param->win_width + x] = color;
+}
+
+void	ft_drawsprite(t_param *param, float transformy, float sprite_size)
+{
+	int		y;
+	int		x;
+
+	x = param->sprite.drawstartx;
+	while (x < param->sprite.drawendx)
+	{
+		if (transformy > 0 && x > 0 && x < param->win_width
+			&& transformy < param->sprite.buffer[x])
+		{
+			y = param->sprite.drawstarty;
+			while (y < param->sprite.drawendy)
+			{
+				ft_puttexture(param, x, y, sprite_size);
+				y++;
+			}
+		}
+		x++;
+	}
+}
+
+void	ft_zero(t_param *param)
+{
+	param->sprite.drawstartx = 0;
+	param->sprite.drawendx = 0;
+	param->sprite.drawstarty = 0;
+	param->sprite.drawendy = 0;
+	param->sprite.spritescreenx = 0;
+}
+
+void	ft_putsprite(t_param *param)
+{
+	float	distanceprojection;
+	float	sprite_size;
+	int		id;
+	float	transformy;
 
 	id = 0;
 	ft_spritedistance(param);
@@ -215,59 +297,12 @@ void	ft_putsprite(t_param *param)
 		distanceprojection = (param->win_width / 2) / tan(FOV / 2);
 		sprite_size = (param->tile_s * 0.5 /
 			param->sprite.distance[id]) * distanceprojection;
+		ft_zero(param);
 		if (ft_spritevisible(param, id, sprite_size) == 1)
 		{
-			spritex = param->sprite.x[id] - param->player.x;
-			spritey = param->sprite.y[id] - param->player.y;
-			invdet = 1.0 / (param->player.planx * param->player.diry
-				- param->player.dirx * param->player.plany);
-			transformx = invdet * (param->player.diry * spritex
-				- param->player.dirx * spritey);
-			transformy = invdet * (-param->player.plany * spritex
-				+ param->player.planx * spritey);
-			spritescreenx = (int)((param->win_width / 2) *
-				(1 + -transformx / transformy));
-
-			spriteheight = sprite_size;
-			drawstarty = -spriteheight / 2 + param->win_height / 2;
-			if (drawstarty < 0)
-				drawstarty = 0;
-			drawendy = spriteheight / 2 + param->win_height / 2;
-			if (drawendy >= param->win_height)
-				drawendy = param->win_height - 1;
-
-			spritewidth = sprite_size;
-			drawstartx = -spritewidth / 2 + spritescreenx;
-			if (drawstartx < 0)
-				drawstartx = 0;
-			drawendx = spritewidth / 2 + spritescreenx;
-			if (drawendx >= param->win_width)
-				drawendx = param->win_width - 1;
-
-			x = drawstartx;
-			while (x < drawendx)
-			{
-				if (transformy > 0 && x > 0 && x < param->win_width
-					&& transformy < param->sprite.buffer[x])
-				{
-					y = drawstarty;
-					while (y < drawendy)
-					{
-						textureoffsetx = (int)(256 * (x - (-sprite_size /
-							2 + spritescreenx)) * param->sprite.width
-							/ sprite_size) / 256;
-						distancefromtop = (y) * 256 - param->win_height *
-							128 + sprite_size * 128;
-						textureoffsety = ((distancefromtop *
-							param->sprite.height) / sprite_size) / 256;
-						color = param->sprite.data[(textureoffsety *
-							param->sprite.width) + textureoffsetx];
-						param->img.data[y * param->win_width + x] = color;
-						y++;
-					}
-				}
-				x++;
-			}
+			transformy = ft_gettransformy(param, id, sprite_size);
+			ft_getstart(param, sprite_size);
+			ft_drawsprite(param, transformy, sprite_size);
 		}
 		id++;
 	}

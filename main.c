@@ -109,7 +109,7 @@ int			main(int ac, char **av)
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
-//	system("leaks cub3D");
+	system("leaks cub3D");
 	mlx_loop(param.mlx_ptr);
 	return (1);
 }

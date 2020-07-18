@@ -13,7 +13,7 @@
 #ifndef INCLUDE_H
 # define INCLUDE_H
 
-# include "minilibx_mms_/mlx.h"
+# include "mlx.h"
 # include "parsing/parsing.h"
 # include <unistd.h>
 # include <stdio.h>
@@ -116,6 +116,12 @@ typedef struct	s_sprite
 	char	*path;
 	int		nb_sprite;
 	float	*buffer;
+	float	*bottom;
+	int		spritescreenx;
+	int		drawstarty;
+	int 	drawendy;
+	int 	drawstartx;
+	int 	drawendx;
 }				t_sprite;	
 
 typedef struct	s_param
@@ -183,7 +189,6 @@ void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id);
 void	ft_initsprite(t_param *param);
 void	ft_spritetxt(t_param *param);
 float	ft_angle(t_param *param);
-void	ft_drawsprite(float y_start, float y_end, float sprite_size, t_param *param, int id);
 void	ft_putsprite(t_param *param);
 float	ft_angle(t_param *param);
 void	ft_putchar_fd(char c, int fd);

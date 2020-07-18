@@ -10,7 +10,8 @@
 /*   Updated: 2020/02/03 10:16:11 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-# include "../include.h"
+
+#include "../include.h"
 #include "parsing.h"
 
 void	ft_fillcolor(char *line, t_param *param, int *temp)
@@ -19,23 +20,27 @@ void	ft_fillcolor(char *line, t_param *param, int *temp)
 
 	n = 0;
 	if (*line == 'F')
-		param->f_color = (((temp[n]) << 16) + ((temp[n + 1]) << 8) + (temp[n + 2]));
+		param->f_color = (((temp[n]) << 16) +
+		((temp[n + 1]) << 8) + (temp[n + 2]));
 	if (*line == 'C')
-		param->c_color = (((temp[n]) << 16) + ((temp[n + 1]) << 8) + (temp[n + 2]));
+		param->c_color = (((temp[n]) << 16) +
+		((temp[n + 1]) << 8) + (temp[n + 2]));
 	return ;
 }
 
-int 	ft_color(char *line, t_param *param)
+int		ft_color(char *line, t_param *param)
 {
-	int i = 1;
-	int n = 0;
+	int i;
+	int n;
 	int *temp;
 
+	i = 1;
+	n = 0;
 	temp = NULL;
 	temp = ft_createtab(temp);
-	while(line[i])
+	while (line[i])
 	{
-		while(line [i] == 32)
+		while (line[i] == 32)
 			i++;
 		if (!(line[i] >= '0' && line[i] <= '9'))
 			return (0);
@@ -57,7 +62,7 @@ int 	ft_color(char *line, t_param *param)
 	}
 	ft_fillcolor(line, param, temp);
 	free(temp);
-	return (1);	
+	return (1);
 }
 
 int 	ft_resolution(char *line, t_param *param)
@@ -67,9 +72,9 @@ int 	ft_resolution(char *line, t_param *param)
 
 	i = 1;
 	n = 0;
-	while(line[i])
+	while (line[i])
 	{
-		while(line[i] == 32)
+		while (line[i] == 32)
 			i++;
 		if (!(line[i] >= '0' && line[i] <= '9'))
 			return (0);
@@ -87,30 +92,39 @@ int 	ft_resolution(char *line, t_param *param)
 			n++;
 		}
 	}
-	return (1);	
+	return (1);
 }
 
 int	ft_texture(char *line, t_param *param)
 {
 	int i;
 	int n;
+//	char	*temp;
 
 	n = ft_definedirection(line);
 	i = 1;
 	if (n == 22)
 		return (0);
-	if(line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
+	if (line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
 		i++;
-	while(line[i] == 32)
+	while (line[i] == 32)
 		i++;
 	if (line[i] != '.')
 		return (0);
 	if (!(ft_verifline(&line[i]) == 1))
 		return (0);
 	if (n == S)
+	{
+//		temp = param->sprite.path;
 		param->sprite.path = ft_strdup(&line[i]);
-	else 
+//		free(temp);
+	}
+	else
+	{
+//		temp = param->texture[n].path;
 		param->texture[n].path = ft_strdup(&line[i]);
+//		free(temp);
+	}
 	return (1);
 }
 
@@ -132,6 +146,7 @@ void	ft_printparsing(t_param *param)
 void	ft_fillrows(char *src, t_param *param, int len, int i)
 {
 	int l;
+
 	l = 0;
 	while (src[l])
 	{
@@ -149,19 +164,20 @@ void	ft_fillrows(char *src, t_param *param, int len, int i)
 	param->map[i][l] = '\0';
 }
 
-
 void	ft_creatmap(t_list *maps, t_param *param)
 {
-	int i = 0;
-	int j = 0;
+	int i;
+	int j;
 
+	i = 0;
+	j = 0;
 	param->map_rows = ft_lstsize(maps);
 	param->map_cols = ft_getlen(maps);
-	if(!(param->map = (char **)malloc(sizeof(char *) * param->map_rows + 1)))
+	if (!(param->map = (char **)malloc(sizeof(char *) * param->map_rows + 1)))
 		return ;
 	while (i < param->map_rows)
 	{
-		if(!(param->map[i] = malloc(sizeof(char) * param->map_cols + 1)))
+		if (!(param->map[i] = malloc(sizeof(char) * param->map_cols + 1)))
 			return ;
 		i++;
 	}
@@ -169,7 +185,7 @@ void	ft_creatmap(t_list *maps, t_param *param)
 	{
 		ft_fillrows(maps->str, param, param->map_cols, i);
 		maps = maps->next;
-	}	
+	}
 }
 
 /*void	ft_freemap(t_param *param)
@@ -188,7 +204,7 @@ int	ft_parsingscene(int fd, t_param *param)
 	t_list	*maps;
 	int r;
 	char *line;
-	
+
 	r = 0;
 	line = NULL;
 	maps = NULL;
@@ -207,7 +223,7 @@ int	ft_parsingscene(int fd, t_param *param)
 		{
 			if (!(ft_texture(line, param) == 1))
 			{
-			free(line);
+				free(line);
 				return (3);
 			}
 			free(line);
@@ -222,7 +238,7 @@ int	ft_parsingscene(int fd, t_param *param)
 			free(line);
 		}
 		if (*line == '1' || *line == ' ')
-			break;
+			break ;
 	}
 	if (!r)
 	{
@@ -263,7 +279,7 @@ int	ft_parsingscene(int fd, t_param *param)
 
 void	ft_parsing(char *fichier, t_param *param)
 {
-	int fd; 
+	int fd;
 
 	fd = open(fichier, O_RDONLY);
 	printf("retour %d\n", ft_parsingscene(fd, param));
