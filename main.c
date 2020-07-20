@@ -93,8 +93,12 @@ int			main(int ac, char **av)
 //	int			width;
 //	int			height;
 
-	ft_parsing(av[1], &param);
-	param.argument = ac;
+	if ((ft_parsing(av[1], &param) != 1))
+	{
+		system("leaks cub3D");
+		return (1);
+	}
+/*	param.argument = ac;
 	param.mlx_ptr = mlx_init();
 	param.win_ptr = mlx_new_window(param.mlx_ptr,
 		param.win_width, param.win_height, "Cub3D");
@@ -110,6 +114,7 @@ int			main(int ac, char **av)
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 	system("leaks cub3D");
-	mlx_loop(param.mlx_ptr);
+	mlx_loop(param.mlx_ptr);*/
+	system("leaks cub3D");
 	return (1);
 }

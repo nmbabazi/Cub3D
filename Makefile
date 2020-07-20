@@ -21,15 +21,19 @@ $(NAME) : $(OBJSRCS)
 	@echo "\033[33m[Remove last version...]"
 	@rm -rf Cub3D
 	@echo "\033[33m[Cub3D compilation...]"
-	@gcc -o $(NAME) -I include.h $(OBJSRCS) $(MLX)  -Wall -Wextra -Werror -g
+	@echo "\033[33m[Libft compilation...]"
+	$(MAKE) -C ./libft
+	@gcc -o $(NAME) -I include.h $(OBJSRCS) $(MLX) ./libft/libft.a -Wall -Wextra -Werror -g
 	@echo "\033[33m[Done !]"
 
 all : $(NAME)
 
 clean :
 	rm -rf $(OBJSRCS)
+	$(MAKE) clean -C ./libft
 
 fclean : clean
+	$(MAKE) fclean -C ./libft
 	rm -rf $(NAME)
 	rm -rf cub3d.bmp
 

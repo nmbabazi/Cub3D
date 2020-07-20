@@ -121,6 +121,16 @@ int		exit_properly(void *data)
 	t_param *param;
 
 	param = (t_param *)data;
+	/*void	ft_freemap(t_param *param)
+{
+	int l = 0;
+	while (l < param->map_rows)
+	{
+		free(param->map[l]);
+		l++;
+	}
+	free(param->map);
+}*/
 	exit(0);
 	return (1);
 }
