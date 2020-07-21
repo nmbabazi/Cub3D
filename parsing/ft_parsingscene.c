@@ -6,7 +6,7 @@
 /*   By: nailambz <nailambz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/21 19:16:15 by nailambz         ###   ########.fr       */
+/*   Updated: 2020/07/21 19:24:35 by nailambz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,8 @@ int	ft_creatmap(t_list *maps, t_param *param)
 
 int		ft_pars(t_param *param, char *line, int *tab)
 {
+		if (*line == '1' || *line == ' ')
+			return (-2);
 		if (*line == 'R')
 				return (ft_resolution(line, param, tab));
 		if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
@@ -405,17 +407,14 @@ int	ft_parsingscene(int fd, t_param *param)
 	tab = ft_createtab(tab, 8);
 	while ((r = get_next_line(&line, fd)) > 0)
 	{
-		if (*line == '1' || *line == ' ')
-			break ;
 		ret = ft_pars(param, line, tab);
+		if (ret == -2)
+			break ;
 		if (ret!= 1)
 			return (ret);
 	}
 	if (!r)
-	{
-		free(line);
 		return (0);
-	}
 	if ((ret = ft_buildmap(param, line, &r, fd) != 1))
 			return (ret);
 	ft_printparsing(param);
