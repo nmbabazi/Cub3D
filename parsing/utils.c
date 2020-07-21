@@ -140,12 +140,16 @@ t_list	*add_link(t_list *maps, char *line)
 	char *swp;
 
 	if (!(tmp = (t_list *)malloc(sizeof(t_list) * 1)))
+	{
+		free(line);
 		return (NULL);
+	}
 	if (tmp)
 	{
 		tmp->str = ft_strdup(line);
 		tmp->next = maps;
 	}
+	free(line);
 	return (tmp);
 }
 

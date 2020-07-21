@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_parsingscene.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nailambz <nailambz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/02/03 10:16:11 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/21 19:16:15 by nailambz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ int		ft_color(char *line, t_param *param, int *tab)
 		while (line[i] == 32)
 			i++;
 		if (!(line[i] >= '0' && line[i] <= '9'))
-			return (0);
+		{
+			free(line);
+			free(temp);
+			return (4);
+		}
 		while ((line[i] >= '0' && line[i] <= '9') && line[i] != ',' && line[i])
 		{
 			temp[n] = (temp[n] * 10) + (line[i] - 48);
@@ -54,8 +58,9 @@ int		ft_color(char *line, t_param *param, int *tab)
 		{
 			if (temp[n] < 0 || temp[n] > 255)
 			{
+				free(line);
 				free(temp);
-				return (0);
+				return (4);
 			}
 			i++;
 			n++;
@@ -63,10 +68,12 @@ int		ft_color(char *line, t_param *param, int *tab)
 	}
 	if (n != 2 || line[i] != '\0')
 	{
+		free(line);
 		free(temp);
-		return (0);
+		return (4);
 	}
 	ft_fillcolor(line, param, temp);
+	free(line);
 	free(temp);
 	return (1);
 }
@@ -84,11 +91,17 @@ int 	ft_resolution(char *line, t_param *param, int *tab)
 		while (line[i] == 32)
 			i++;
 		if (!(line[i] >= '0' && line[i] <= '9'))
-			return (0);
+		{
+			free(line);
+			return (2);
+		}
 		while ((line[i] >= '0' && line[i] <= '9') && line[i] != 32 && line[i])
 		{
 			if (n != 0 && n != 1)
-				return (0);
+			{
+				free(line);
+				return (2);
+			}
 			if (n == 0)
 				param->win_width = (param->win_width * 10) + (line[i] - 48);
 			if (n == 1)
@@ -101,6 +114,7 @@ int 	ft_resolution(char *line, t_param *param, int *tab)
 			n++;
 		}
 	}
+	free(line);
 	return (1);
 }
 
@@ -113,22 +127,32 @@ int	ft_texture(char *line, t_param *param, int *tab)
 	i = 1;
 	ft_filltab(line, tab);
 	if (n == 22)
-		return (0);
+	{
+		free(line);
+		return (3);
+	}
 	if (line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
 		i++;
 	while (line[i] == 32)
 		i++;
 	if (line[i] != '.')
-		return (0);
+	{
+		free(line);
+		return (3);
+	}
 	if (!(ft_veriftxt(&line[i]) == 1))
-		return (0);
+	{
+		free(line);
+		return (3);
+	}
 	if (n == S)
 	{
 		param->sprite.path = ft_strdup(&line[i]);
 		if (ft_open(param->sprite.path) == -1)
 		{
 			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			return (0);
+			free(line);
+			return (3);
 		}
 	}
 	else
@@ -137,7 +161,8 @@ int	ft_texture(char *line, t_param *param, int *tab)
 		if (ft_open(param->texture[n].path) == -1)
 		{
 			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			return (0);
+			free(line);
+			return (3);
 		}
 	}
 	free(line);
@@ -293,6 +318,8 @@ int	ft_creatmap(t_list *maps, t_param *param)
 	j = 0;
 	param->map_rows = ft_lstsize(maps);
 	param->map_cols = ft_getlen(maps);
+	param->tile_s = param->win_width / param->map_cols;
+	param->num_rays = param->win_width;
 	if (!(param->map = (char **)malloc(sizeof(char *) * param->map_rows + 1)))
 		return (0);
 	while (i++ < param->map_rows)
@@ -313,58 +340,33 @@ int	ft_creatmap(t_list *maps, t_param *param)
 	return (1);
 }
 
-int	ft_parsingscene(int fd, t_param *param)
+int		ft_pars(t_param *param, char *line, int *tab)
 {
-	t_list	*maps;
-	int r;
-	char *line;
-	int		*tab;
-
-	r = 0;
-	line = NULL;
-	maps = NULL;
-	tab = ft_createtab(tab, 8);
-	while ((r = get_next_line(&line, fd)) > 0)
-	{
 		if (*line == 'R')
-		{
-			if (!(ft_resolution(line, param, tab) == 1))
-			{
-				free(line);
-				return (2);
-			}
-			free(line);
-		}
+				return (ft_resolution(line, param, tab));
 		if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
-		{
-			if (!(ft_texture(line, param, tab) == 1))
-			{
-				free(line);
-				return (3);
-			}
-		//	free(line);
-		}
+				return (ft_texture(line, param, tab));
 		if (*line == 'C' || *line == 'F')
+				return (ft_color(line, param, tab));
+		if (*line == 'R' || *line == 'N' || *line == 'S' || *line == 'W'
+			|| *line == 'E' || *line == 'C' || *line == 'F')
 		{
-			if (!(ft_color(line, param, tab) == 1))
-			{
 				free(line);
-				return (4);
-			}
-			free(line);
+				return (-1);
 		}
-		if (*line == '1' || *line == ' ')
-			break ;
-	//	free(line);
-	}
-	if (!r)
-	{
 		free(line);
 		return (0);
-	}
+}
+
+int	ft_buildmap(t_param *param, char *line, int *r, int fd)
+{
+	int ret;
+	t_list	*maps;
+
+	ret = 0;
+	maps = NULL;
 	maps = add_link(maps, line);
-	free(line);
-	while ((r = get_next_line(&line, fd)) > 0)
+	while ((*r = get_next_line(&line, fd)) > 0)
 	{
 		if (!(*line == '1' || *line == ' '))
 		{
@@ -373,7 +375,6 @@ int	ft_parsingscene(int fd, t_param *param)
 			return (5);
 		}
 		maps = add_link(maps, line);
-		free(line);
 	}
 	if (!(*line == '1' || *line == ' ') || *line == '\0')
 	{
@@ -383,19 +384,44 @@ int	ft_parsingscene(int fd, t_param *param)
 	}
 	if (*line == '1' || *line == ' ')
 		maps = add_link(maps, line);
-	free(line);
 	if (ft_creatmap(maps, param) != 1)
 	{
 		ft_lstclear(&maps, &ft_freestr);
 		return (6);
 	}
-	ft_printparsing(param);
 	ft_lstclear(&maps, &ft_freestr);
+	return (1);
+}
+
+int	ft_parsingscene(int fd, t_param *param)
+{
+	int		r;
+	char	*line;
+	int		*tab;
+	int		ret;
+
+	r = 0;
+	line = NULL;
+	tab = ft_createtab(tab, 8);
+	while ((r = get_next_line(&line, fd)) > 0)
+	{
+		if (*line == '1' || *line == ' ')
+			break ;
+		ret = ft_pars(param, line, tab);
+		if (ret!= 1)
+			return (ret);
+	}
+	if (!r)
+	{
+		free(line);
+		return (0);
+	}
+	if ((ret = ft_buildmap(param, line, &r, fd) != 1))
+			return (ret);
+	ft_printparsing(param);
 	if (ft_checktab(tab, 8) == 0)
 		return (7);
-	param->tile_s = param->win_width / param->map_cols;
-	param->num_rays = param->win_width;
-	return (1);
+	return (ret);
 }
 
 int	ft_parsing(char *fichier, t_param *param)
