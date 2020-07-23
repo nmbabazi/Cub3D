@@ -1,8 +1,8 @@
-R        1000           1000
+R        1000     9      1000
 NO ./textures/txt_nord.xpm
 SO ./textures/txt_sud.xpm
 
-SA ./textures/txt_west.xpm
+WE ./textures/txt_west.xpm
 
 EA ./textures/txt_est.xpm
 S ./textures/plante.xpm

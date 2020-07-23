@@ -107,16 +107,13 @@ int		ft_color(char *line, t_param *param, int *tab)
 	return (1);
 }
 
-int		ft_fillrez(t_param *param, char *line, int n, int *tab)
+int		ft_fillrez(t_param *param, int i, char *line, int n)
 {
-	int i;
-
-	i = 0;
 	while ((line[i] >= '0' && line[i] <= '9') && line[i] != 32 && line[i])
 	{
 		if (n > 1)
 		{
-			ft_freeall(line, tab);
+			free(line);
 			return (0);
 		}
 		if (n == 0)
@@ -140,12 +137,12 @@ int		ft_resolution(char *line, t_param *param, int *tab)
 	{
 		while (line[i] == 32)
 			i++;
-		if (!(line[i] >= '0' && line[i] <= '9') || n >= 2)
+		if (!(line[i] >= '0' && line[i] <= '9') && n >= 2)
 		{
-			ft_freeall(line, tab);
+			free(line);
 			return (2);
 		}
-		if ((i += ft_fillrez(param, &line[i], n, tab)) == 0)
+		if ((i = ft_fillrez(param, i, line, n)) == 0)
 			return (2);
 		if (line[i] == 32)
 		{
@@ -157,69 +154,59 @@ int		ft_resolution(char *line, t_param *param, int *tab)
 	return (1);
 }
 
-int		ft_wichtexture(t_param *param, char *line, int n, int *tab)
+int		ft_wichtexture(t_param *param, char *line, int i)
 {
+	int n;
+
+	n = ft_definedirection(line);
+	if (n == 22)
+		return (0);
 	if (n == S)
 	{
-		param->sprite.path = ft_strdup(line);
+		param->sprite.path = ft_strdup(&line[i]);
 		if (ft_open(param->sprite.path) == -1)
 		{
 			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			ft_freeall(line, tab);
 			return (0);
 		}
 	}
 	if (n < 4)
 	{
-		param->texture[n].path = ft_strdup(line);
+		param->texture[n].path = ft_strdup(&line[i]);
 		if (ft_open(param->texture[n].path) == -1)
 		{
 			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			ft_freeall(line, tab);
 			return (0);
 		}
 	}
 	return (1);
 }
 
-int		ft_checkdoublon(int *tab, char *line)
-{
-	if (tab[3] == 2 || tab[4] == 2 || tab[5] == 2
-		| tab[6] == 2 || tab[7] == 2)
-	{
-		ft_putstr_fd("ERROR DOUBLON TEXTURE\n", 1);
-		ft_freeall(line, tab);
-		return (0);
-	}
-	else
-		return (1);
-}
-
-int		ft_texture(char *line, t_param *param, int *tab, int n)
+int		ft_texture(char *line, t_param *param, int *tab)
 {
 	int i;
 
 	i = 1;
-	if ((n = ft_definedirection(line, tab)) == 22)
-		return (3);
-	if (ft_checkdoublon(tab, line) == 0)
-		return (3);
+	ft_filltab(line, tab);
 	if (line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
 		i++;
 	while (line[i] == 32)
 		i++;
 	if (line[i] != '.')
 	{
-		ft_freeall(line, tab);
+		free(line);
 		return (3);
 	}
 	if (!(ft_veriftxt(&line[i]) == 1))
 	{
-		ft_freeall(line, tab);
+		free(line);
 		return (3);
 	}
-	if (ft_wichtexture(param, &line[i], n, tab) != 1)
+	if (ft_wichtexture(param, line, i) != 1)
+	{
+		free(line);
 		return (3);
+	}
 	free(line);
 	return (1);
 }
@@ -394,18 +381,12 @@ int		ft_creatmap(t_list *maps, t_param *param)
 
 int		ft_pars(t_param *param, char *line, int *tab)
 {
-	int n;
-
-	n = 0;
 	if (*line == '1' || *line == ' ')
 		return (-2);
 	if (*line == 'R')
 		return (ft_resolution(line, param, tab));
 	if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
-	{
-		ft_filltab(line, tab);
-		return (ft_texture(line, param, tab, n));
-	}
+		return (ft_texture(line, param, tab));
 	if (*line == 'C' || *line == 'F')
 		return (ft_color(line, param, tab));
 	if (*line == '\0' || *line == '\n')
@@ -471,7 +452,10 @@ int		ft_parsingscene(int fd, t_param *param, char *line)
 		if (ret == -2)
 			break ;
 		if (ret != 1)
+		{
+			free(tab);
 			return (ret);
+		}
 	}
 	if (!r)
 		return (5);

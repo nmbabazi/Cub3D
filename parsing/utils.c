@@ -93,7 +93,7 @@ int		ft_lstsize(t_list *lst)
 	return (size);
 }
 
-int		ft_definedirection(char *line, int *tab)
+int		ft_definedirection(char *line)
 {
 	int i;
 	int n;
@@ -111,9 +111,7 @@ int		ft_definedirection(char *line, int *tab)
 	if (line[i] == 'S' && line[i + 1] == 32)
 		n = S;
 	else if (line[i] == 'S' && line[i + 1] != 'O' && line[i + 1] != 32)
-		ft_freeall(line, tab);
-	if (n == 22)
-		ft_freeall(line, tab);
+		free(line);
 	return (n);
 }
 
@@ -236,3 +234,17 @@ void	ft_filltab(char *line, int *tab)
 	if (line[i] == 'S' && line[i + 1] == ' ')
 		tab[7]++;
 }
+
+/*int ft_checkdoublon(int *tab, char *line)
+{
+	if (tab[3] == 2 || tab[4] == 2 || tab[5] == 2 || tab[6] == 2 || tab[7] == 2 )
+	{
+		ft_putstr_fd("ERROR DOUBLON\n", 1);
+		ft_freeall(line, tab);
+		return (0);
+	}
+	else
+		return (1);
+}
+	if (ft_checkdoublon(tab, line) == 0)
+		return (3)*/

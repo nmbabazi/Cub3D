@@ -31,7 +31,7 @@ typedef	struct	s_list
 int				get_next_line(char **line, int fd);
 char			*ft_strnew(size_t n);
 int				ft_veriftxt(char *line);
-int				ft_definedirection(char *line, int *tab);
+int				ft_definedirection(char *line);
 int				ft_lstsize(t_list *lst);
 void			ft_lstadd_back(t_list **alst, t_list *new);
 void			ft_freestr(char *str);
@@ -42,6 +42,5 @@ int				*ft_createtab(int *tab, int len);
 int				ft_open(char *path);
 int				ft_checktab(int *tab, int len);
 void			ft_filltab(char *line, int *tab);
-void			ft_freeall(char *line, int *tab);
 
 #endif
