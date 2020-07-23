@@ -235,16 +235,21 @@ void	ft_filltab(char *line, int *tab)
 		tab[7]++;
 }
 
-/*int ft_checkdoublon(int *tab, char *line)
+int		ft_checkdoublon(int *tab, char *line)
 {
-	if (tab[3] == 2 || tab[4] == 2 || tab[5] == 2 || tab[6] == 2 || tab[7] == 2 )
+	if (tab[3] == 2 || tab[4] == 2 || tab[5] == 2
+		|| tab[6] == 2 || tab[7] == 2)
 	{
-		ft_putstr_fd("ERROR DOUBLON\n", 1);
-		ft_freeall(line, tab);
+		ft_putstr_fd("DOUBLON TEXTURE\n", 1);
+		free(line);
 		return (0);
 	}
 	else
 		return (1);
 }
-	if (ft_checkdoublon(tab, line) == 0)
-		return (3)*/
+
+void	ft_freeall(char *line, int *tab)
+{
+	free(line);
+	free(tab);
+}

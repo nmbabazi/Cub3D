@@ -38,7 +38,7 @@
 # define VERT 1
 # define HORZ 0
 # define MINIMAP 0.3
-# define FOV 60 * (M_PI / 180)
+# define FOV 1.0471975511965977f
 
 typedef struct		s_player
 {
@@ -116,7 +116,6 @@ typedef struct		s_sprite
 	char	*path;
 	int		nb_sprite;
 	float	*buffer;
-	float	*bottom;
 	int		spritescreenx;
 	int		drawstarty;
 	int		drawendy;
@@ -202,5 +201,8 @@ void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
 void				ft_initplan(t_param *param);
 void				ft_initdir(t_param *param);
-
+int					ft_checkarg(int ac, char **av);
+int					ft_checksave(char *str);
+int					ft_checkcub(char *str);
+void				ft_initall(t_param *param);
 #endif

@@ -116,21 +116,106 @@ void	ft_initwin_size(t_param *param, int width, int height)
 	return ;
 }
 
-int		exit_properly(void *data)
+void	ft_freemap(t_param *param)
 {
-	t_param *param;
+	int l;
 
-	param = (t_param *)data;
-	/*void	ft_freemap(t_param *param)
-{
-	int l = 0;
+	l = 0;
 	while (l < param->map_rows)
 	{
 		free(param->map[l]);
 		l++;
 	}
 	free(param->map);
-}*/
+}
+
+void	ft_freesprite(t_param *param)
+{
+	free(param->sprite.x);
+	free(param->sprite.y);
+	free(param->sprite.distance);
+	free(param->sprite.buffer);
+}
+
+int		exit_properly(void *data)
+{
+	t_param *param;
+
+	param = (t_param *)data;
+	ft_freemap(param);
+	ft_freesprite(param);
 	exit(0);
 	return (1);
+}
+
+int		ft_checkcub(char *str)
+{
+	int len;
+
+	len = ft_strlen(str) - 1;
+	if (str[len] != 'b')
+		return (0);
+	len--;
+	if (str[len] != 'u')
+		return (0);
+	len--;
+	if (str[len] != 'c')
+		return (0);
+	len--;
+	if (str[len] != '.')
+		return (0);
+	return (1);
+}
+
+int		ft_checksave(char *str)
+{
+	int i;
+	int len;
+
+	len = ft_strlen(str);
+	i = 0;
+	if (str[i] != '-')
+		return (0);
+	i++;
+	if (str[i] != '-')
+		return (0);
+	i++;
+	if (str[i] != 's')
+		return (0);
+	i++;
+	if (str[i] != 'a')
+		return (0);
+	i++;
+	if (str[i] != 'v')
+		return (0);
+	i++;
+	if (str[i] != 'e')
+		return (0);
+	return (1);
+}
+
+int		ft_checkarg(int ac, char **av)
+{
+	if (ac == 2)
+	{
+		if (ft_checkcub(av[1]) == 0)
+			return (0);
+		return (1);
+	}
+	else if (ac == 3)
+	{
+		if (ft_checksave(av[2]) == 0)
+			return (0);
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_initall(t_param *param)
+{
+	ft_initplayer(param);
+	ft_inittexture(param);
+	ft_initsprite(param);
+	ft_initdir(param);
+	ft_initplan(param);
 }

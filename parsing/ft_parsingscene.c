@@ -12,12 +12,6 @@
 
 #include "parsing.h"
 
-void	ft_freeall(char *line, int *tab)
-{
-	free(line);
-	free(tab);
-}
-
 void	ft_fillcolor(char *line, t_param *param, int *temp)
 {
 	int n;
@@ -187,7 +181,6 @@ int		ft_texture(char *line, t_param *param, int *tab)
 	int i;
 
 	i = 1;
-	ft_filltab(line, tab);
 	if (line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
 		i++;
 	while (line[i] == 32)
@@ -266,13 +259,12 @@ int		ft_checksurrounding(char c, int i, int j, char **map)
 int		ft_checkcorner(t_param *param, int i, int j, char **map)
 {
 	if (((i == 0 || j == 0) && (map[i][j] == '0'
-	|| map[i][j] == '2' || map[i][j] == 'N'
-	|| map[i][j] == 'S' || map[i][j] == 'W'
-	|| map[i][j] == 'E')) || ((i == param->map_rows
-	|| j == param->map_cols) && (map[i][j] == '0'
-	|| map[i][j] == '2' || map[i][j] == 'N'
-	|| map[i][j] == 'S' || map[i][j] == 'W'
-	|| map[i][j] == 'E')))
+		|| map[i][j] == '2' || map[i][j] == 'N' || map[i][j] == 'S'
+		|| map[i][j] == 'W' || map[i][j] == 'E')))
+		return (0);
+	if (((i == param->map_rows - 1 || j == param->map_cols - 1) &&
+		(map[i][j] == '0' || map[i][j] == '2' || map[i][j] == 'N'
+		|| map[i][j] == 'S' || map[i][j] == 'W' || map[i][j] == 'E')))
 		return (0);
 	return (1);
 }
@@ -386,7 +378,12 @@ int		ft_pars(t_param *param, char *line, int *tab)
 	if (*line == 'R')
 		return (ft_resolution(line, param, tab));
 	if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
+	{
+		ft_filltab(line, tab);
+		if (ft_checkdoublon(tab, line) == 0)
+			return (3);
 		return (ft_texture(line, param, tab));
+	}
 	if (*line == 'C' || *line == 'F')
 		return (ft_color(line, param, tab));
 	if (*line == '\0' || *line == '\n')
@@ -438,6 +435,22 @@ int		ft_buildmap(t_param *param, char *line, int *r, int fd)
 	return (1);
 }
 
+int		ft_suiteparsing(t_param *param, char *line, int *r, int fd)
+{
+	int ret;
+
+	ret = 0;
+	if (*r == 0)
+	{
+		free(line);
+		return (5);
+	}
+	if ((ret = ft_buildmap(param, line, r, fd)) != 1)
+		return (ret);
+	printf("OK\n");
+	return (1);
+}
+
 int		ft_parsingscene(int fd, t_param *param, char *line)
 {
 	int		r;
@@ -457,11 +470,11 @@ int		ft_parsingscene(int fd, t_param *param, char *line)
 			return (ret);
 		}
 	}
-	if (!r)
-		return (5);
-	if ((ret = ft_buildmap(param, line, &r, fd)) != 1)
+	if ((ret = ft_suiteparsing(param, line, &r, fd)) != 1)
+	{
+		free(tab);
 		return (ret);
-	ft_printparsing(param);
+	}
 	if (ft_checktab(tab, 8) == 0)
 		return (6);
 	return (ret);

@@ -42,5 +42,7 @@ int				*ft_createtab(int *tab, int len);
 int				ft_open(char *path);
 int				ft_checktab(int *tab, int len);
 void			ft_filltab(char *line, int *tab);
+int				ft_checkdoublon(int *tab, char *line);
+void			ft_freeall(char *line, int *tab);
 
 #endif

@@ -90,31 +90,27 @@ int			game_loop(t_param *param)
 int			main(int ac, char **av)
 {
 	t_param		param;
-//	int			width;
-//	int			height;
 
+	if (ft_checkarg(ac, av) == 0)
+	{
+		ft_putstr_fd("ERROR ARG\n", 1);
+		return (0);
+	}
 	if ((ft_parsing(av[1], &param) != 1))
 	{
 		system("leaks cub3D");
 		return (0);
 	}
-/*	param.argument = ac;
+	param.argument = ac;
 	param.mlx_ptr = mlx_init();
 	param.win_ptr = mlx_new_window(param.mlx_ptr,
 		param.win_width, param.win_height, "Cub3D");
-	ft_initplayer(&param);
-//	mlx_get_screen_size(&param.mlx_ptr, &width, &height);
-//	ft_initwin_size(&param, width, height);
-	ft_inittexture(&param);
-	ft_initsprite(&param);
-	ft_initdir(&param);
-	ft_initplan(&param);
+	ft_initall(&param);
 	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 	system("leaks cub3D");
-	mlx_loop(param.mlx_ptr);*/
-	system("leaks cub3D");
+	mlx_loop(param.mlx_ptr);
 	return (1);
 }
