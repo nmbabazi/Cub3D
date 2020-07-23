@@ -12,6 +12,12 @@
 
 #include "parsing.h"
 
+void	ft_freeall(char *line, int *tab)
+{
+	free(line);
+	free(tab);
+}
+
 void	ft_fillcolor(char *line, t_param *param, int *temp)
 {
 	int n;
@@ -26,47 +32,70 @@ void	ft_fillcolor(char *line, t_param *param, int *temp)
 	return ;
 }
 
-int		ft_color(char *line, t_param *param, int *tab)
+int		ft_convertint(char *line, int *i, int *temp)
+{
+	int l;
+	int nb;
+
+	l = *i;
+	nb = 0;
+	while (ft_isdigit(line[l]) == 1 && line[l])
+	{
+		nb = (nb * 10) + (line[l] - 48);
+		l++;
+	}
+	if (nb < 0 || nb > 255)
+	{
+		free(temp);
+		return (-1);
+	}
+	*i = l;
+	return (nb);
+}
+
+int		*ft_fillrgb(char *line, int *temp, int *m, int n)
 {
 	int i;
-	int n;
-	int *temp;
 
 	i = 1;
-	n = 0;
-	temp = NULL;
-	temp = ft_createtab(temp, 3);
-	ft_filltab(line, tab);
 	while (line[i])
 	{
 		while (line[i] == 32)
 			i++;
-		if (!(line[i] >= '0' && line[i] <= '9'))
-		{
-			free(line);
-			free(temp);
-			return (4);
-		}
-		while ((line[i] >= '0' && line[i] <= '9') && line[i] != ',' && line[i])
-		{
-			temp[n] = (temp[n] * 10) + (line[i] - 48);
-			i++;
-		}
+		if (ft_isdigit(line[i]) == 0)
+			return (0);
+		if ((temp[n] = ft_convertint(line, &i, temp)) < 0)
+			return (0);
 		while (line[i] == 32 && n < 2)
 			i++;
+		if (line[i] != '\0' && line[i] != ',')
+			return (0);
 		if (line[i] == ',')
 		{
-			if (temp[n] < 0 || temp[n] > 255)
-			{
-				free(line);
-				free(temp);
-				return (4);
-			}
 			i++;
 			n++;
 		}
 	}
-	if (n != 2 || line[i] != '\0')
+	*m = n;
+	return (temp);
+}
+
+int		ft_color(char *line, t_param *param, int *tab)
+{
+	int n;
+	int *temp;
+
+	n = 0;
+	temp = NULL;
+	temp = ft_createtab(temp, 3);
+	ft_filltab(line, tab);
+	if ((temp = ft_fillrgb(line, temp, &n, n)) == 0)
+	{
+		free(line);
+		free(temp);
+		return (4);
+	}
+	if (n != 2)
 	{
 		free(line);
 		free(temp);
@@ -78,7 +107,28 @@ int		ft_color(char *line, t_param *param, int *tab)
 	return (1);
 }
 
-int 	ft_resolution(char *line, t_param *param, int *tab)
+int		ft_fillrez(t_param *param, char *line, int n, int *tab)
+{
+	int i;
+
+	i = 0;
+	while ((line[i] >= '0' && line[i] <= '9') && line[i] != 32 && line[i])
+	{
+		if (n > 1)
+		{
+			ft_freeall(line, tab);
+			return (0);
+		}
+		if (n == 0)
+			param->win_width = (param->win_width * 10) + (line[i] - 48);
+		if (n == 1)
+			param->win_height = (param->win_height * 10) + (line[i] - 48);
+		i++;
+	}
+	return (i);
+}
+
+int		ft_resolution(char *line, t_param *param, int *tab)
 {
 	int i;
 	int n;
@@ -90,24 +140,13 @@ int 	ft_resolution(char *line, t_param *param, int *tab)
 	{
 		while (line[i] == 32)
 			i++;
-		if (!(line[i] >= '0' && line[i] <= '9'))
+		if (!(line[i] >= '0' && line[i] <= '9') || n >= 2)
 		{
-			free(line);
+			ft_freeall(line, tab);
 			return (2);
 		}
-		while ((line[i] >= '0' && line[i] <= '9') && line[i] != 32 && line[i])
-		{
-			if (n != 0 && n != 1)
-			{
-				free(line);
-				return (2);
-			}
-			if (n == 0)
-				param->win_width = (param->win_width * 10) + (line[i] - 48);
-			if (n == 1)
-				param->win_height = (param->win_height * 10) + (line[i] - 48);
-			i++;
-		}
+		if ((i += ft_fillrez(param, &line[i], n, tab)) == 0)
+			return (2);
 		if (line[i] == 32)
 		{
 			i++;
@@ -118,53 +157,69 @@ int 	ft_resolution(char *line, t_param *param, int *tab)
 	return (1);
 }
 
-int	ft_texture(char *line, t_param *param, int *tab)
+int		ft_wichtexture(t_param *param, char *line, int n, int *tab)
+{
+	if (n == S)
+	{
+		param->sprite.path = ft_strdup(line);
+		if (ft_open(param->sprite.path) == -1)
+		{
+			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
+			ft_freeall(line, tab);
+			return (0);
+		}
+	}
+	if (n < 4)
+	{
+		param->texture[n].path = ft_strdup(line);
+		if (ft_open(param->texture[n].path) == -1)
+		{
+			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
+			ft_freeall(line, tab);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int		ft_checkdoublon(int *tab, char *line)
+{
+	if (tab[3] == 2 || tab[4] == 2 || tab[5] == 2
+		| tab[6] == 2 || tab[7] == 2)
+	{
+		ft_putstr_fd("ERROR DOUBLON TEXTURE\n", 1);
+		ft_freeall(line, tab);
+		return (0);
+	}
+	else
+		return (1);
+}
+
+int		ft_texture(char *line, t_param *param, int *tab, int n)
 {
 	int i;
-	int n;
 
-	n = ft_definedirection(line);
 	i = 1;
-	ft_filltab(line, tab);
-	if (n == 22)
-	{
-		free(line);
+	if ((n = ft_definedirection(line, tab)) == 22)
 		return (3);
-	}
+	if (ft_checkdoublon(tab, line) == 0)
+		return (3);
 	if (line[i] == 'O' || line[i] == 'E' || line[i] == 'A')
 		i++;
 	while (line[i] == 32)
 		i++;
 	if (line[i] != '.')
 	{
-		free(line);
+		ft_freeall(line, tab);
 		return (3);
 	}
 	if (!(ft_veriftxt(&line[i]) == 1))
 	{
-		free(line);
+		ft_freeall(line, tab);
 		return (3);
 	}
-	if (n == S)
-	{
-		param->sprite.path = ft_strdup(&line[i]);
-		if (ft_open(param->sprite.path) == -1)
-		{
-			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			free(line);
-			return (3);
-		}
-	}
-	else
-	{
-		param->texture[n].path = ft_strdup(&line[i]);
-		if (ft_open(param->texture[n].path) == -1)
-		{
-			ft_putstr_fd("CAN'T OPEN TEXTURE\n", 1);
-			free(line);
-			return (3);
-		}
-	}
+	if (ft_wichtexture(param, &line[i], n, tab) != 1)
+		return (3);
 	free(line);
 	return (1);
 }
@@ -182,7 +237,7 @@ void	ft_printparsing(t_param *param)
 	printf("cieling =%x      flour =%x\n", param->c_color, param->f_color);
 	while (i < param->map_rows)
 	{
-		printf("%s\n", param->map[i]);
+		printf("%s--%zu--%d\n", param->map[i], ft_strlen(param->map[i]), i);
 		i++;
 	}
 	return ;
@@ -235,7 +290,7 @@ int		ft_checkcorner(t_param *param, int i, int j, char **map)
 	return (1);
 }
 
-int	ft_checkmap(char **map, t_param *param)
+int		ft_checkmap(char **map, t_param *param)
 {
 	int i;
 	int j;
@@ -309,25 +364,22 @@ void	ft_fillgap(t_param *param)
 	}
 }
 
-int	ft_creatmap(t_list *maps, t_param *param)
+int		ft_creatmap(t_list *maps, t_param *param)
 {
 	int i;
-	int j;
 
-	i = -1;
-	j = 0;
+	i = 0;
 	param->map_rows = ft_lstsize(maps);
 	param->map_cols = ft_getlen(maps);
-	param->tile_s = param->win_width / param->map_cols;
-	param->num_rays = param->win_width;
 	if (!(param->map = (char **)malloc(sizeof(char *) * param->map_rows + 1)))
 		return (0);
-	while (i++ < param->map_rows)
+	while (i < param->map_rows)
 	{
 		if (!(param->map[i] = malloc(sizeof(char) * param->map_cols + 1)))
 			return (0);
+		i++;
 	}
-	while (--i > 0 && maps)
+	while (--i >= 0 && maps)
 	{
 		ft_fillrows(maps->str, param, param->map_cols, i);
 		maps = maps->next;
@@ -342,27 +394,44 @@ int	ft_creatmap(t_list *maps, t_param *param)
 
 int		ft_pars(t_param *param, char *line, int *tab)
 {
-		if (*line == '1' || *line == ' ')
-			return (-2);
-		if (*line == 'R')
-				return (ft_resolution(line, param, tab));
-		if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
-				return (ft_texture(line, param, tab));
-		if (*line == 'C' || *line == 'F')
-				return (ft_color(line, param, tab));
-		if (*line == 'R' || *line == 'N' || *line == 'S' || *line == 'W'
-			|| *line == 'E' || *line == 'C' || *line == 'F')
-		{
-				free(line);
-				return (-1);
-		}
+	int n;
+
+	n = 0;
+	if (*line == '1' || *line == ' ')
+		return (-2);
+	if (*line == 'R')
+		return (ft_resolution(line, param, tab));
+	if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
+	{
+		ft_filltab(line, tab);
+		return (ft_texture(line, param, tab, n));
+	}
+	if (*line == 'C' || *line == 'F')
+		return (ft_color(line, param, tab));
+	if (*line == '\0' || *line == '\n')
+	{
 		free(line);
-		return (0);
+		return (1);
+	}
+	ft_putstr_fd("WRONG CHARACTER IN SCENE\n", 1);
+	free(line);
+	return (0);
 }
 
-int	ft_buildmap(t_param *param, char *line, int *r, int fd)
+int		ft_checklastline(char *line, t_list *maps)
 {
-	int ret;
+	if (!(*line == '1' || *line == ' ') || *line == '\0')
+	{
+		free(line);
+		ft_lstclear(&maps, &ft_freestr);
+		return (0);
+	}
+	return (1);
+}
+
+int		ft_buildmap(t_param *param, char *line, int *r, int fd)
+{
+	int		ret;
 	t_list	*maps;
 
 	ret = 0;
@@ -370,73 +439,81 @@ int	ft_buildmap(t_param *param, char *line, int *r, int fd)
 	maps = add_link(maps, line);
 	while ((*r = get_next_line(&line, fd)) > 0)
 	{
-		if (!(*line == '1' || *line == ' '))
-		{
-			free(line);
-			ft_lstclear(&maps, &ft_freestr);
+		if (ft_checklastline(line, maps) != 1)
 			return (5);
-		}
 		maps = add_link(maps, line);
 	}
-	if (!(*line == '1' || *line == ' ') || *line == '\0')
-	{
-		free(line);
-		ft_lstclear(&maps, &ft_freestr);
-		return (6);
-	}
-	if (*line == '1' || *line == ' ')
-		maps = add_link(maps, line);
+	if (ft_checklastline(line, maps) != 1)
+		return (5);
+	maps = add_link(maps, line);
 	if (ft_creatmap(maps, param) != 1)
 	{
 		ft_lstclear(&maps, &ft_freestr);
-		return (6);
+		return (5);
 	}
+	param->tile_s = param->win_width / param->map_cols;
+	param->num_rays = param->win_width;
 	ft_lstclear(&maps, &ft_freestr);
 	return (1);
 }
 
-int	ft_parsingscene(int fd, t_param *param)
+int		ft_parsingscene(int fd, t_param *param, char *line)
 {
 	int		r;
-	char	*line;
 	int		*tab;
 	int		ret;
 
 	r = 0;
-	line = NULL;
 	tab = ft_createtab(tab, 8);
 	while ((r = get_next_line(&line, fd)) > 0)
 	{
 		ret = ft_pars(param, line, tab);
 		if (ret == -2)
 			break ;
-		if (ret!= 1)
+		if (ret != 1)
 			return (ret);
 	}
 	if (!r)
-		return (0);
-	if ((ret = ft_buildmap(param, line, &r, fd) != 1))
-			return (ret);
+		return (5);
+	if ((ret = ft_buildmap(param, line, &r, fd)) != 1)
+		return (ret);
 	ft_printparsing(param);
 	if (ft_checktab(tab, 8) == 0)
-		return (7);
+		return (6);
 	return (ret);
 }
 
-int	ft_parsing(char *fichier, t_param *param)
+void	ft_errormessage(int ret, char *line)
 {
-	int fd;
-	int ret;
+	if (ret == 2)
+		ft_putstr_fd("ERROR: resolution\n", 1);
+	else if (ret == 3)
+		ft_putstr_fd("ERROR: texture\n", 1);
+	else if (ret == 4)
+		ft_putstr_fd("ERROR: colors\n", 1);
+	else if (ret == 5)
+		ft_putstr_fd("ERROR: map\n", 1);
+	else if (ret == 6)
+		ft_putstr_fd("WRONG NUMBER OF ELENMENT IN SCENE\n", 1);
+}
+
+int		ft_parsing(char *fichier, t_param *param)
+{
+	int		fd;
+	int		ret;
+	char	*line;
 
 	ret = 0;
+	line = NULL;
 	fd = open(fichier, O_RDONLY);
 	if (fd == -1)
 	{
 		ft_putstr_fd("CAN'T OPEN SCENE\n", 1);
 		return (0);
 	}
-	ret = ft_parsingscene(fd, param);
-	printf("retour %d\n", ret);
+	ret = ft_parsingscene(fd, param, line);
+	if (ret != 1)
+		ft_errormessage(ret, line);
 	close(fd);
 	return (ret);
 }

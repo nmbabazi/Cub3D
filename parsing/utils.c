@@ -12,34 +12,11 @@
 
 #include "parsing.h"
 
-int	ft_veriftxt(char *line)
+int		ft_isxpm(char *line)
 {
 	int i;
+
 	i = 0;
-	if (!(line[i] == '.'))
-		return (0);
-	i++;
-	if (!(line[i] == '/'))
-		return (0);
-	i++;
-	if (!(ft_isalnum(line[i]) == 1 || line[i] == '_'))
-		return (0);
-	while (line[i] && (ft_isalnum(line[i]) == 1 || line[i] == '_'))
-		i++;
-	while (line[i] != '\0')
-	{
-		if (line[i] == '/')
-		{
-			i++;
-			if (!(line[i] || (ft_isalnum(line[i]) == 1 || line[i] == '_')))
-				return (0);
-			while (line[i] && (ft_isalnum(line[i]) == 1 || line[i] == '_'))
-				i++;
-		}
-		if (line[i] == '.')
-			break ;
-		i++;
-	}
 	if (line[i] == '.')
 	{
 		i++;
@@ -55,10 +32,55 @@ int	ft_veriftxt(char *line)
 	}
 	if (line[i] != '\0')
 		return (0);
+	return (i);
+}
+
+int		ft_checkname(char *line, int i)
+{
+	while (line[i] != '\0')
+	{
+		if (line[i] == '/')
+		{
+			i++;
+			if (ft_isalnum(line[i]) != 1 && line[i] != '_')
+				return (0);
+			while (line[i] && (ft_isalnum(line[i]) == 1 || line[i] == '_'))
+				i++;
+			if (line[i] != '/' && line[i] != '.')
+				return (0);
+		}
+		if (line[i] == '.')
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+int		ft_veriftxt(char *line)
+{
+	int i;
+
+	i = 0;
+	if (!(line[i] == '.'))
+		return (0);
+	i++;
+	if (!(line[i] == '/'))
+		return (0);
+	i++;
+	if (!(ft_isalnum(line[i]) == 1 || line[i] == '_'))
+		return (0);
+	while (line[i] && (ft_isalnum(line[i]) == 1 || line[i] == '_'))
+		i++;
+	if (line[i] != '/' && line[i] != '.')
+		return (0);
+	if ((i = ft_checkname(line, i)) == 0)
+		return (0);
+	if ((i = ft_isxpm(&line[i])) == 0)
+		return (0);
 	return (1);
 }
 
-int	ft_lstsize(t_list *lst)
+int		ft_lstsize(t_list *lst)
 {
 	int	size;
 
@@ -71,7 +93,7 @@ int	ft_lstsize(t_list *lst)
 	return (size);
 }
 
-int	ft_definedirection(char *line)
+int		ft_definedirection(char *line, int *tab)
 {
 	int i;
 	int n;
@@ -88,6 +110,10 @@ int	ft_definedirection(char *line)
 		n = EA;
 	if (line[i] == 'S' && line[i + 1] == 32)
 		n = S;
+	else if (line[i] == 'S' && line[i + 1] != 'O' && line[i + 1] != 32)
+		ft_freeall(line, tab);
+	if (n == 22)
+		ft_freeall(line, tab);
 	return (n);
 }
 
@@ -116,19 +142,18 @@ void	ft_lstclear(t_list **lst, void (*del)(char *))
 	*lst = 0;
 }
 
-int	ft_getlen(t_list *maps)
+int		ft_getlen(t_list *maps)
 {
-	int i;
 	int len;
+	int check;
 
-	i = 0;
 	len = 0;
+	check = 0;
 	while (maps)
 	{
-		while (maps->str[i])
-			i++;
-		if (i > len)
-			len = i;
+		check = ft_strlen(maps->str);
+		if (check >= len)
+			len = check;
 		maps = maps->next;
 	}
 	return (len);
@@ -137,7 +162,7 @@ int	ft_getlen(t_list *maps)
 t_list	*add_link(t_list *maps, char *line)
 {
 	t_list	*tmp;
-	char *swp;
+	char	*swp;
 
 	if (!(tmp = (t_list *)malloc(sizeof(t_list) * 1)))
 	{
@@ -165,7 +190,7 @@ int		*ft_createtab(int *tab, int len)
 	return (tab);
 }
 
-int	ft_open(char *path)
+int		ft_open(char *path)
 {
 	return (open(path, O_RDONLY));
 }

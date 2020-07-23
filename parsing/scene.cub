@@ -1,13 +1,15 @@
-R 1000             1000
+R        1000           1000
 NO ./textures/txt_nord.xpm
 SO ./textures/txt_sud.xpm
 
-WE ./textures/txt_west.xpm
+SA ./textures/txt_west.xpm
+
 EA ./textures/txt_est.xpm
 S ./textures/plante.xpm
 
-F 220,             100,0
-C 225           ,30,0
+F 220,25,0
+
+C 225,30,0
 
         1111111111111111111111111
         1000010000110000000000001

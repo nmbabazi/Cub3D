@@ -96,7 +96,7 @@ int			main(int ac, char **av)
 	if ((ft_parsing(av[1], &param) != 1))
 	{
 		system("leaks cub3D");
-		return (1);
+		return (0);
 	}
 /*	param.argument = ac;
 	param.mlx_ptr = mlx_init();
