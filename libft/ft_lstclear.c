@@ -1,38 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/10 14:23:38 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:20:30 by nmbabazi         ###   ########.fr       */
+/*   Created: 2020/07/24 15:58:13 by nmbabazi          #+#    #+#             */
+/*   Updated: 2020/07/24 15:58:38 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include <stdio.h>
 #include "libft.h"
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+void	ft_lstclear(t_list **lst, void (*del)(char *))
 {
-	unsigned char	*ps1;
-	unsigned char	*ps2;
+	t_list	*current;
+	t_list	*previous;
 
-	ps1 = (unsigned char *)s1;
-	ps2 = (unsigned char *)s2;
-	while (*ps1 == *ps2 && --n)
+	if (lst)
 	{
-		ps1++;
-		ps2++;
+		current = *lst;
+		while (current)
+		{
+			previous = current;
+			current = current->next;
+			(*del)(previous->str);
+			free(previous);
+			previous = 0;
+		}
 	}
-	if (n > 0)
-		return (*ps1 - *ps2);
-	return (0);
-}
-
-int	main(void)
-{
-	printf("%d\n", ft_memcmp(NULL, "", 1));
-	printf("%d\n", memcmp(NULL, "", 1));
+	*lst = 0;
 }

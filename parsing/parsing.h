@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/08 08:25:16 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:21:43 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:46:40 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@
 # include <stdlib.h>
 # include <math.h>
 # include <fcntl.h>
-
-typedef	struct	s_list
-{
-	char			*str;
-	struct s_list	*next;
-}				t_list;
 
 int				get_next_line(char **line, int fd);
 char			*ft_strnew(size_t n);
@@ -44,14 +38,8 @@ int				ft_checktab(int *tab, int len);
 void			ft_filltab(char *line, int *tab);
 int				ft_checkdoublon(int *tab, char *line);
 void			ft_freeall(char *line, int *tab);
-void			ft_fillcolor(char *line, t_param *param, int *temp);
-int				ft_convertcolorint(char *line, int *i, int *temp);
 int				ft_fillrgb(char *line, int *temp, int *m, int n);
-int				ft_color(char *line, t_param *param, int *tab);
-int				ft_resolution(char *line, t_param *param, int *tab);
-int				ft_buildmap(t_param *param, char *line, int *r, int fd);
-int				ft_oneplayer(char **map, t_param *param);
-int				ft_checkmap(char **map, t_param *param);
-int				ft_buildmap(t_param *param, char *line, int *r, int fd);
+int				ft_isxpm(char *line);
+int             ft_convertint(char *line, int *i, int *temp);
 
 #endif

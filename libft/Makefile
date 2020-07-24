@@ -38,6 +38,8 @@ SRCS = 	ft_memset.c\
 				ft_toupper.c\
 				ft_tolower.c\
 				ft_strdup.c\
+				ft_lstsize.c\
+				ft_lstclear.c\
 
 OBJS	= ${SRCS:.c=.o}
 

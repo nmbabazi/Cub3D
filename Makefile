@@ -4,14 +4,28 @@ MLX = -I /usr/local/include -L /usr/local/lib -lmlx -framework OpenGL -framework
 NAME = cub3D
 
 SRCS = 	main.c \
-		ft_ray.c\
-		ft_player.c \
-		utiles.c \
-		ft_texture.c \
-		ft_walls.c	\
-		ft_sprite.c \
-		ft_save.c \
-		parsing/ft_parsingscene.c \
+		player/player.c \
+		player/vecteur.c \
+		player/initplayer.c \
+		ray/ray.c \
+		ray/horzandvert.c \
+		wall/wall.c	\
+		texture.c \
+		sprite/putsprite.c \
+		sprite/initsprite.c \
+		sprite/drawsprite.c \
+		sprite/sortsprite.c \
+		screenshot/save.c \
+		utiles/exit.c \
+		utiles/utiles.c \
+		parsing/checkarg.c \
+		parsing/checkmap.c \
+		parsing/parscolor.c \
+		parsing/parsmap.c \
+		parsing/parsresolution.c \
+		parsing/parstexture.c \
+		parsing/startparsing.c \
+		parsing/tab.c \
 		parsing/utils.c \
 		parsing/gnl.c \
 

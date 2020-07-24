@@ -6,11 +6,11 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:27:50 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:00:23 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:39:53 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.h"
+#include "../include.h"
 
 float	ft_distance(float x, float y, float xend, float yend)
 {

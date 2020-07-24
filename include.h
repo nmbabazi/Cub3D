@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:20:45 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:44:34 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,6 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_save(t_param *param, char *name);
 void				ft_writecolor(int fd, t_param *param);
-int					ft_parsing(char *fichier, t_param *param);
 void				ft_initwin_size(t_param *param, int width, int height);
 void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
@@ -215,4 +214,16 @@ void				ft_spritedistance(t_param *param);
 void				ft_drawsprite(t_param *param,
 						float transformy, float sprite_size);
 void				ft_zero(t_param *param);
+int					ft_parsing(char *fichier, t_param *param);
+int					ft_color(char *line, t_param *param, int *tab);
+int					ft_resolution(char *line, t_param *param, int *tab);
+int					ft_buildmap(t_param *param, char *line, int *r, int fd);
+int					ft_oneplayer(char **map, t_param *param);
+int					ft_checkmap(char **map, t_param *param);
+int					ft_buildmap(t_param *param, char *line, int *r, int fd);
+void				ft_fillcolor(char *line, t_param *param, int *temp);
+void				ft_sortsprite(t_param *param);
+void				ft_updatevect(t_param *param);
+int					ft_texture(char *line, t_param *param, int *tab);
+
 #endif

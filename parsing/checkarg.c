@@ -6,11 +6,11 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:59:44 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:00:32 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:40:07 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.h"
+#include "../include.h"
 
 int		ft_checkcub(char *str)
 {

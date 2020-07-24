@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:07:03 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:09:29 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:46:58 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_fillcolor(char *line, t_param *param, int *temp)
 	return ;
 }
 
-int		ft_convertcolorint(char *line, int *i, int *temp)
+int		ft_convertint(char *line, int *i, int *temp)
 {
 	int l;
 	int nb;
@@ -55,7 +55,7 @@ int		ft_fillrgb(char *line, int *temp, int *m, int n)
 			i++;
 		if (ft_isdigit(line[i]) == 0)
 			return (0);
-		if ((temp[n] = ft_convercolortint(line, &i, temp)) < 0)
+		if ((temp[n] = ft_convertint(line, &i, temp)) < 0)
 			return (0);
 		while (line[i] == 32 && n < 2)
 			i++;

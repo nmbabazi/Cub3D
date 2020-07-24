@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_save.c                                          :+:      :+:    :+:   */
+/*   save.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 15:38:57 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/17 15:39:03 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:37:49 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.h"
+#include "../include.h"
 
 void	ft_fillheader(t_file_header *file_header,
 			t_info_header *info_header, t_param *param)

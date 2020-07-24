@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 12:02:57 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:40:30 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:23:28 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_drawplayer(int x, int y, int col, t_param *param)
 	return ;
 }
 
-void			ft_renderplayer(t_param *param)
+void	ft_renderplayer(t_param *param)
 {
 	int l;
 	int size_player;
@@ -50,7 +50,7 @@ void			ft_renderplayer(t_param *param)
 		(param->player.y - size_player / 2) * MINIMAP, 0xFF0000, param);
 }
 
-void			ft_playerdirection(t_param *param, float angle_start)
+void	ft_playerdirection(t_param *param, float angle_start)
 {
 	float angle;
 
@@ -62,7 +62,7 @@ void			ft_playerdirection(t_param *param, float angle_start)
 		param->player.facingvert = 0;
 }
 
-void			ft_translation(t_param *param, float movestep,
+void	ft_translation(t_param *param, float movestep,
 			float *newplayerx, float *newplayery)
 {
 	float translationangle;
@@ -82,7 +82,7 @@ void			ft_translation(t_param *param, float movestep,
 		return ;
 }
 
-void			ft_updateplayer(t_param *param)
+void	ft_updateplayer(t_param *param)
 {
 	float movestep;
 	float newplayerx;

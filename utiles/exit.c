@@ -6,11 +6,11 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:58:27 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:59:09 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 16:39:41 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.h"
+#include "../include.h"
 
 void	ft_freemap(t_param *param)
 {
