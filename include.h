@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   include.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/29 15:25:41 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/24 15:20:45 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,10 +199,20 @@ int					ft_parsing(char *fichier, t_param *param);
 void				ft_initwin_size(t_param *param, int width, int height);
 void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
-void				ft_initplan(t_param *param);
-void				ft_initdir(t_param *param);
 int					ft_checkarg(int ac, char **av);
 int					ft_checksave(char *str);
 int					ft_checkcub(char *str);
 void				ft_initall(t_param *param);
+void				ft_initplan(t_param *param);
+void				ft_initdir(t_param *param);
+int					ft_findhithorz(t_param *param,
+						float nexthorzx, float nexthorzy);
+int					ft_findhitvert(t_param *param,
+						float nextvertx, float nextverty);
+float				ft_casthorzray(t_param *param);
+float				ft_castvertray(t_param *param);
+void				ft_spritedistance(t_param *param);
+void				ft_drawsprite(t_param *param,
+						float transformy, float sprite_size);
+void				ft_zero(t_param *param);
 #endif

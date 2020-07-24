@@ -93,7 +93,8 @@ int			main(int ac, char **av)
 
 	if (ft_checkarg(ac, av) == 0)
 	{
-		ft_putstr_fd("ERROR ARG\n", 1);
+		ft_putstr_fd("ERROR\n WRONG ARG\n", 1);
+		system("leaks cub3D");
 		return (0);
 	}
 	if ((ft_parsing(av[1], &param) != 1))
