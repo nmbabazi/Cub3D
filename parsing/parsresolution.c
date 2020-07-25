@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:10:51 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:11:48 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 14:00:19 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,10 @@ int		ft_findnum(t_param *param, char *line, int n)
 			i++;
 		}
 		if (!(line[i] >= '0' && line[i] <= '9') || (n != 0 && n != 1))
-		{
-			free(line);
 			return (0);
-		}
 		if ((i = ft_fillrez(param, i, line, n)) == 0)
 			return (0);
-		if (line[i] == 32)
+		if (line[i] == 32 && line[i + 1] != '\0')
 		{
 			i++;
 			n++;

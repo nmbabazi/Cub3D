@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/06/29 18:35:28 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 14:01:29 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ int			game_loop(t_param *param)
 	ft_rendermap(param);
 	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
+	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
+			0, 0);
 	if (param->argument == 3)
 	{
 		ft_save(param, "save.bmp");
 		exit_properly(param);
 	}
-	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
-			0, 0);
 	mlx_destroy_image(param->mlx_ptr, param->img.img_ptr);
 	return (1);
 }

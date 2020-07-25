@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:07:03 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:46:58 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 13:57:42 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		ft_fillrgb(char *line, int *temp, int *m, int n)
 		{
 			return (0);
 		}
-		if (line[i] == ',')
+		if (line[i] == ',' && line[i + 1] != '\0')
 		{
 			i++;
 			n++;

@@ -6,13 +6,13 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:19:15 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 13:37:23 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-/*void	ft_printparsing(t_param *param)
+void	ft_printparsing(t_param *param)
 {
 	int i;
 
@@ -29,7 +29,7 @@
 		i++;
 	}
 	return ;
-}*/
+}
 
 int		ft_pars(t_param *param, char *line, int *tab)
 {
@@ -97,6 +97,7 @@ int		ft_parsingscene(int fd, t_param *param, char *line)
 		free(tab);
 		return (ret);
 	}
+	ft_printparsing(param);
 	if (ft_checktab(tab, 8) == 0)
 		return (6);
 	return (ret);
