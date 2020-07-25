@@ -6,7 +6,7 @@ SO ./textures/txt_sud.xpm
 WE ./textures/txt_west.xpm
 
 EA ./textures/txt_est.xpm
-S ./textures/sprite_gem.xpm
+S ./textures/sprite_flower.xpm
 
 F 122,25,12
 

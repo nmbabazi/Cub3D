@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 17:35:30 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:41:31 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ int			game_loop(t_param *param)
 	ft_updateplayer(param);
 	ft_castallrays(param);
 	ft_putsprite(param);
-//	ft_rendermap(param);
-//	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
 			0, 0);
@@ -111,7 +109,6 @@ int			main(int ac, char **av)
 	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
 	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
-	system("leaks cub3D");
 	mlx_loop(param.mlx_ptr);
 	return (1);
 }

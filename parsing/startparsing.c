@@ -6,30 +6,11 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 16:38:34 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 18:00:14 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-void	ft_printparsing(t_param *param)
-{
-	int i;
-
-	i = 0;
-	printf("HEIGHT =%d     WIDTH =%d\n", param->win_height, param->win_width);
-	printf("TXT_NO =%s    TXT_SO =%s    TXT_WE =%s   TXT_EA =%s\n",
-		param->texture[NO].path, param->texture[SO].path,
-		param->texture[WE].path, param->texture[EA].path);
-	printf("TXT_SPRITE =%s\n", param->sprite.path);
-	printf("cieling =%x      flour =%x\n", param->c_color, param->f_color);
-	while (i < param->map_rows)
-	{
-		printf("%s--%zu--%d\n", param->map[i], ft_strlen(param->map[i]), i);
-		i++;
-	}
-	return ;
-}
 
 int		ft_pars(t_param *param, char *line, int *tab)
 {
@@ -96,7 +77,6 @@ int		ft_parsingscene(int fd, t_param *param, char *line)
 		free(tab);
 		return (ret);
 	}
-	ft_printparsing(param);
 	if (ft_checktab(tab, 8) == 0)
 		return (6);
 	return (ret);
