@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:51:29 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:54:45 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 16:32:50 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,8 @@ void	ft_puttexture(t_param *param, int x, int y, float sprite_size)
 		param->sprite.height) / sprite_size) / 256;
 	color = param->sprite.data[(textureoffsety *
 		param->sprite.width) + textureoffsetx];
-	if (color == 0xFFFFFF)
-		color = 0xFFFF00;
-	param->img.data[y * param->win_width + x] = color;
+	if (color != 0x000000)
+		param->img.data[y * param->win_width + x] = color;
 }
 
 void	ft_drawsprite(t_param *param, float transformy, float sprite_size)

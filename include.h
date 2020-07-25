@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:44:34 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 16:29:23 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_save(t_param *param, char *name);
 void				ft_writecolor(int fd, t_param *param);
-void				ft_initwin_size(t_param *param, int width, int height);
+void				ft_initwin_size(t_param *param);
 void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
 int					ft_checkarg(int ac, char **av);
