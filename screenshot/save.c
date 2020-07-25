@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 15:38:57 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:37:49 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:22:42 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,21 @@ void	ft_writebmp(t_file_header *file_header,
 	write(fd, &info_header->important_color, 4);
 }
 
-void	ft_writecolor(int fd, t_param *param)
+void	ft_writecolor(int fd, t_param *param, unsigned int img_size)
 {
 	char	*pixel_array;
-	int		image_size;
 	int		i;
 	int		j;
 
-	image_size = param->win_width * param->win_height;
-	if (!(pixel_array = malloc(sizeof(char) * param->img.size_l)))
+	if (!(pixel_array = malloc(sizeof(char) * img_size)))
 	{
 		ft_putstr_fd("pbm de malloc", 1);
 		return ;
 	}
 	i = 0;
 	j = 0;
-	while (i < image_size)
+	img_size = img_size / 4;
+	while (i < img_size)
 	{
 		pixel_array[j++] = param->img.data[i] & 255;
 		pixel_array[j++] = (param->img.data[i] & 255 << 8) >> 8;
@@ -76,7 +75,7 @@ void	ft_writecolor(int fd, t_param *param)
 		pixel_array[j++] = 0;
 		i++;
 	}
-	write(fd, pixel_array, param->img.size_l * param->win_height);
+	write(fd, pixel_array, img_size *= 4);
 	free(pixel_array);
 }
 
@@ -94,6 +93,6 @@ void	ft_save(t_param *param, char *name)
 	}
 	ft_fillheader(&file_header, &info_header, param);
 	ft_writebmp(&file_header, &info_header, fd);
-	ft_writecolor(fd, param);
+	ft_writecolor(fd, param, info_header.img_size);
 	close(fd);
 }

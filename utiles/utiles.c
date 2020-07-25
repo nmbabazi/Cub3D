@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:27:50 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 16:29:10 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 16:39:25 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,6 @@ float	ft_normalizeangle(float angle)
 	return (angle);
 }
 
-void	ft_initwin_size(t_param *param)
-{
-	if (param->win_height > 1440)
-		param->win_height = 1440;
-	if (param->win_width > 2560)
-		param->win_width = 2560;
-	if (param->win_height < 60)
-		param->win_height = 60;
-	if (param->win_width < 60)
-		param->win_width = 60;
-	if (param->win_height / param->win_width > 28.8)
-		param->win_width = param->win_height / 28.8;
-	if (param->win_width / param->win_height > 6.4)
-		param->win_height = param->win_width / 6.4;
-	param->tile_s = param->win_width / param->map_cols;
-	param->num_rays = param->win_width;
-	return ;
-}
-
 void	ft_initall(t_param *param)
 {
 	ft_initplayer(param);
@@ -73,5 +54,4 @@ void	ft_initall(t_param *param)
 	ft_initsprite(param);
 	ft_initdir(param);
 	ft_initplan(param);
-	ft_initwin_size(param);
 }

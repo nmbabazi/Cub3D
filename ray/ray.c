@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ray.c                                           :+:      :+:    :+:   */
+/*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:47:27 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:44:02 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:36:34 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ void	ft_castallrays(t_param *param)
 		horzhitdistance = ft_casthorzray(param);
 		verthitdistance = ft_castvertray(param);
 		ft_findhitdirection(param, horzhitdistance, verthitdistance);
-		ft_drawline(param->player.x * MINIMAP, param->player.y * MINIMAP,
-			param->ray.rayangle, param);
 		ft_render3d(param, id);
 		angle += FOV / param->win_width;
 		id++;

@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 16:31:44 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 16:38:34 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ int		ft_suiteparsing(t_param *param, char *line, int *r, int fd)
 	}
 	if ((ret = ft_buildmap(param, line, r, fd)) != 1)
 		return (ret);
-	param->tile_s = param->win_width / param->map_cols;
-	param->num_rays = param->win_width;
+	ft_checksize(param);
 	return (1);
 }
 

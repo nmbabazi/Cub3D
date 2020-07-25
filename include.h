@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 16:29:23 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:23:14 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ float				ft_angle(t_param *param);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_save(t_param *param, char *name);
-void				ft_writecolor(int fd, t_param *param);
+void				ft_writecolor(int fd, t_param *param, unsigned int img_size);
 void				ft_initwin_size(t_param *param);
 void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
@@ -225,5 +225,6 @@ void				ft_fillcolor(char *line, t_param *param, int *temp);
 void				ft_sortsprite(t_param *param);
 void				ft_updatevect(t_param *param);
 int					ft_texture(char *line, t_param *param, int *tab);
+void				ft_checksize(t_param *param);
 
 #endif

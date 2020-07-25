@@ -6,7 +6,7 @@
 /*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 17:35:30 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/25 17:23:40 by nmbabazi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int			game_loop(t_param *param)
 	ft_updateplayer(param);
 	ft_castallrays(param);
 	ft_putsprite(param);
-//	ft_rendermap(param);
-//	ft_renderplayer(param);
+	ft_rendermap(param);
+	ft_renderplayer(param);
 	mlx_clear_window(param->mlx_ptr, param->win_ptr);
 	mlx_put_image_to_window(param->mlx_ptr, param->win_ptr, param->img.img_ptr,
 			0, 0);
