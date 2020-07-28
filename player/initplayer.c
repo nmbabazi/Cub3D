@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initplayer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:08:15 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:32:56 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 14:31:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ void			ft_initplayer(t_param *param)
 
 	c = ft_findplayer(param);
 	ft_startingdirection(param, c);
-	param->player.walkspeed = 2;
-	param->player.turnspeed = 2 * (M_PI / 180);
+	param->player.walkspeed = 1;
+	if (param->win_width > 500 || param->win_height > 500)
+		param->player.turnspeed = 1 * (M_PI / 180);
+	param->player.turnspeed = 3 * (M_PI / 180);
 	param->player.facingvert = 0;
 	return ;
 }

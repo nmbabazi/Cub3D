@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkarg.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:59:44 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:40:07 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:51:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,21 @@ int		ft_checkarg(int ac, char **av)
 	if (ac == 3)
 	{
 		if (ft_checksave(av[2]) == 0 || ft_checkcub(av[1]) == 0)
+		{
+			ft_putstr_fd("ERROR\n WRONG ARG\n", 1);
 			return (0);
+		}
 		return (1);
 	}
 	if (ac == 2)
 	{
 		if (ft_checkcub(av[1]) == 0)
+		{
+			ft_putstr_fd("ERROR\n WRONG ARG\n", 1);
 			return (0);
+		}
 		return (1);
 	}
+	ft_putstr_fd("ERROR\n WRONG ARG\n", 1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkmap.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:18:46 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 15:21:24 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 16:00:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int		ft_checkmap(char **map, t_param *param)
 	while (map[i])
 	{
 		j = 0;
-		while (map[i][j])
+		while (param->map[i][j])
 		{
 			if (map[i][j] != '0' && map[i][j] != '2' && map[i][j] != 'N'
 				&& map[i][j] != 'S' && map[i][j] != 'W' && map[i][j] != 'E'
@@ -87,6 +87,17 @@ int		ft_checkmap(char **map, t_param *param)
 			j++;
 		}
 		i++;
+	}
+	return (1);
+}
+
+int		ft_checklastline(char *line, t_list *maps)
+{
+	if (!(*line == '1' || *line == ' ') || *line == '\0')
+	{
+		free(line);
+		ft_lstclear(&maps, &ft_freestr);
+		return (0);
 	}
 	return (1);
 }

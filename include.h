@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   include.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 17:23:14 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 16:19:03 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INCLUDE_H
 # define INCLUDE_H
 
-# include "mlx.h"
+# include "./minilibx-linux/mlx.h"
+# include "./minilibx-linux/mlx_int.h"
 # include "parsing/parsing.h"
 # include "./libft/libft.h"
 # include <unistd.h>
@@ -23,18 +24,19 @@
 # include <math.h>
 # include <fcntl.h>
 # include <pthread.h>
+# include <X11/X.h>
 
 # define NO 0
 # define SO 1
 # define EA 2
 # define WE 3
 # define S 4
-# define CAM_LEFT 123
-# define CAM_RIGHT 124
-# define KEY_LEFT 0
-# define KEY_RIGHT 2
-# define KEY_UP 13
-# define KEY_DOWN 1
+# define CAM_LEFT 65361
+# define CAM_RIGHT 65363
+# define KEY_LEFT 97
+# define KEY_RIGHT 100
+# define KEY_UP 119
+# define KEY_DOWN 115
 # define VERT 1
 # define HORZ 0
 # define MINIMAP 0.3
@@ -58,7 +60,7 @@ typedef struct		s_player
 	float		planx;
 }					t_player;
 
-typedef struct		s_img
+typedef struct		s_image
 {
 	void	*img_ptr;
 	int		*data;
@@ -194,7 +196,8 @@ float				ft_angle(t_param *param);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_save(t_param *param, char *name);
-void				ft_writecolor(int fd, t_param *param, unsigned int img_size);
+void				ft_writecolor(int fd, t_param *param,
+					unsigned int img_size);
 void				ft_initwin_size(t_param *param);
 void				ft_initvecteur(t_param *param);
 int					exit_properly(void *data);
@@ -226,5 +229,11 @@ void				ft_sortsprite(t_param *param);
 void				ft_updatevect(t_param *param);
 int					ft_texture(char *line, t_param *param, int *tab);
 void				ft_checksize(t_param *param);
+void				ft_initeverything(t_param *param);
+void				ft_freemap(t_param *param);
+void				ft_freepath(t_param *param);
+void				ft_screen_size(t_param *param);
+void				ft_draw_floor_ceiling(t_param *param);
+void				ft_initimg(t_param *param);
 
 #endif

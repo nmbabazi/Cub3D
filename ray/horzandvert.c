@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   horzandvert.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 14:34:11 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:38:48 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 14:51:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		ft_findhithorz(t_param *param, float nexthorzx, float nexthorzy)
 {
 	int	hit;
 
+	hit = 0;
 	param->ray.nextcheck = param->ray.yintercept;
 	while (nexthorzx >= 0 && nexthorzx <= param->map_cols * param->tile_s
 		&& nexthorzy >= 0 && nexthorzy <= param->map_rows * param->tile_s
@@ -45,6 +46,7 @@ int		ft_findhitvert(t_param *param, float nextvertx, float nextverty)
 {
 	int	hit;
 
+	hit = 0;
 	param->ray.nextcheck = param->ray.xintercept;
 	while (nextvertx >= 0 && nextvertx <= param->map_cols * param->tile_s
 		&& nextverty >= 0 && nextverty <= param->map_rows * param->tile_s

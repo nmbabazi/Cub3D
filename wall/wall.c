@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_walls.c                                         :+:      :+:    :+:   */
+/*   wall.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/23 11:54:23 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 14:42:47 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:40:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,6 @@ int		ft_iswall(float x, float y, t_param *param)
 
 void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id)
 {
-	int	y;
-
-	y = 0;
-	while (y < walltop)
-	{
-		param->img.data[y * param->win_width + id] = param->c_color;
-		y++;
-	}
 	if (param->ray.washitvert == 0 && param->ray.raydown == -1)
 		ft_puttxt(param, walltop, id, NO);
 	if (param->ray.washitvert == 0 && param->ray.raydown == 1)
@@ -98,12 +90,6 @@ void	ft_drawwall(int walltop, int wallbottom, t_param *param, int id)
 		ft_puttxt(param, walltop, id, WE);
 	if (param->ray.washitvert == 1 && param->ray.rayright == 1)
 		ft_puttxt(param, walltop, id, EA);
-	y = wallbottom;
-	while (y < param->win_height)
-	{
-		param->img.data[y * param->win_width + id] = param->f_color;
-		y++;
-	}
 }
 
 void	ft_render3d(t_param *param, int id)

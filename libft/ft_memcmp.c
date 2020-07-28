@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/10 14:23:38 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/24 16:20:30 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/27 11:51:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,4 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	if (n > 0)
 		return (*ps1 - *ps2);
 	return (0);
-}
-
-int	main(void)
-{
-	printf("%d\n", ft_memcmp(NULL, "", 1));
-	printf("%d\n", memcmp(NULL, "", 1));
 }

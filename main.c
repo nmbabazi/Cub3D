@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:35:39 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 17:41:31 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 15:53:18 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int			key_press(int key, void *data)
 	if (key == CAM_LEFT)
 		param->player.turndirection = -1;
 	ft_key(param, key, 1);
-	if (key == 53)
+	if (key == 65307)
 		exit_properly(param);
 	return (1);
 }
@@ -70,6 +70,7 @@ int			game_loop(t_param *param)
 		param->win_width, param->win_height);
 	param->img.data = (int *)mlx_get_data_addr(param->img.img_ptr,
 		&param->img.bpp, &param->img.size_l, &param->img.endian);
+	ft_draw_floor_ceiling(param);
 	ft_updateplayer(param);
 	ft_castallrays(param);
 	ft_putsprite(param);
@@ -89,25 +90,24 @@ int			main(int ac, char **av)
 {
 	t_param		param;
 
+	ft_initeverything(&param);
 	if (ft_checkarg(ac, av) == 0)
-	{
-		ft_putstr_fd("ERROR\n WRONG ARG\n", 1);
-		system("leaks cub3D");
 		return (0);
-	}
 	if ((ft_parsing(av[1], &param) != 1))
 	{
-		system("leaks cub3D");
+		ft_freepath(&param);
+		ft_freemap(&param);
 		return (0);
 	}
 	param.argument = ac;
 	param.mlx_ptr = mlx_init();
+	ft_screen_size(&param);
 	param.win_ptr = mlx_new_window(param.mlx_ptr,
 		param.win_width, param.win_height, "Cub3D");
 	ft_initall(&param);
-	mlx_hook(param.win_ptr, 17, 0, &exit_properly, &param);
-	mlx_hook(param.win_ptr, 2, 0, &key_press, &param);
-	mlx_hook(param.win_ptr, 3, 0, &key_release, &param);
+	mlx_hook(param.win_ptr, 17, 1L << 17, &exit_properly, &param);
+	mlx_hook(param.win_ptr, KeyPress, KeyPressMask, &key_press, &param);
+	mlx_hook(param.win_ptr, KeyRelease, KeyReleaseMask, &key_release, &param);
 	mlx_loop_hook(param.mlx_ptr, &game_loop, &param);
 	mlx_loop(param.mlx_ptr);
 	return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   startparsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmbabazi <nmbabazi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 17:42:00 by nmbabazi          #+#    #+#             */
-/*   Updated: 2020/07/25 18:00:14 by nmbabazi         ###   ########.fr       */
+/*   Updated: 2020/07/28 16:05:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int		ft_suiteparsing(t_param *param, char *line, int *r, int fd)
 	}
 	if ((ret = ft_buildmap(param, line, r, fd)) != 1)
 		return (ret);
-	ft_checksize(param);
 	return (1);
 }
 
