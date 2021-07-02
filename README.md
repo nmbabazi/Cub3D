@@ -3,6 +3,9 @@
 
 Explore ray-casting by making a dynamic view inside a maze
 
+## RUN
+```make && ./cub3D ./parsing/scene.cub```
+
 ## What I learned
 > ray-casting \
 windows, colors, events \
